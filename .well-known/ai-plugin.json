@@ -1,1 +1,18 @@
-
+{
+  "schema_version": "v1",
+  "name_for_human": "AIYLT Plugin",
+  "name_for_model": "aiylt",
+  "description_for_human": "AIYLT 的 ChatGPT 插件，支持智能问答与 API 扩展。",
+  "description_for_model": "AIYLT 插件提供智能问答和 API 服务能力，遵循 OpenAPI 3.1 规范。",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://aiylt.github.io/.well-known/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://aiylt.github.io/logo.png",
+  "contact_email": "support@aiylt.com",
+  "legal_info_url": "https://aiylt.github.io/legal"
+}
