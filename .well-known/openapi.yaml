@@ -83,7 +83,7 @@ components:
           type: number
           minimum: 0
           maximum: 2
-          default: 0.2
+          default: 0.0
           description: "o3 模型的创造性控制参数，低值提高精准度"
         top_p:
           type: number
