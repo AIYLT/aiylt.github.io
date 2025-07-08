@@ -1,0 +1,8 @@
+
+User-agent: *
+Allow: /
+Disallow: /.github/
+Disallow: /scripts/
+Disallow: /test-validator.js
+
+Sitemap: https://aiylt.github.io/sitemap.xml

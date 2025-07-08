@@ -1,0 +1,57 @@
+{
+  "name": "o3-model-validator",
+  "version": "1.0.0",
+  "description": "OpenAI o3-2025-04-16 模型强制验证机制",
+  "main": "actions/verify-o3-model-used.action.js",
+  "type": "module",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Building for production...'",
+    "build:prod": "node scripts/build-production.js",
+    "test": "node test-validator.js",
+    "test:linear": "node scripts/test-linear.js",
+    "deploy": "gh-pages -d .",
+    "deploy:prod": "npm run build:prod && npm run deploy",
+    "validate": "node actions/verify-o3-model-used.action.js",
+    "monitor": "node scripts/monitoring.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AIYLT/aiylt.github.io.git"
+  },
+  "keywords": [
+    "openai",
+    "o3-2025-04-16",
+    "model-validation",
+    "api-interceptor",
+    "verification",
+    "chatgpt"
+  ],
+  "author": "AI验证机制团队",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AIYLT/aiylt.github.io/issues"
+  },
+  "homepage": "https://aiylt.github.io",
+  "devDependencies": {
+    "gh-pages": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "actions/",
+    "index.html",
+    "README.md",
+    "ACTION架构.txt"
+  ],
+  "exports": {
+    ".": "./actions/verify-o3-model-used.action.js",
+    "./validator": "./actions/verify-o3-model-used.action.js"
+  },
+  "dependencies": {
+    "jsdom": "^26.1.0",
+    "undici": "^7.11.0"
+  }
+}

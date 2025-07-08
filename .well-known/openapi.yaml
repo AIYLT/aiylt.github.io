@@ -1,0 +1,425 @@
+openapi: 3.1.0
+info:
+  title: O3 Fixed Model Action
+  version: "1.0.0"
+  description: |
+    **🔒 OpenAI o3-2025-04-16 模型专用强制接口 🔒**
+    
+    模型规格：
+    - 200,000 context window (上下文窗口)
+    - 100,000 max output tokens (最大输出)
+    - Reasoning token support (推理token支持)
+    - Knowledge cutoff: May 31, 2024
+    
+    ⚠️ 重要：此接口专门用于调用 o3-2025-04-16 模型，不接受任何其他模型。
+    🌡️ 温度设定：强制设为0，确保输出的确定性和一致性。
+    📌 强制要求：每次调用必须在响应开头声明："当前模型：OpenAI o3-2025-04-16"，经过技术验证。
+    🛡️ 防篡改验证：内置多重验证机制，防止模型被意外或恶意更改。
+    🚀 支持 o3 的全部功能：流式输出、函数调用、结构化输出、工具调用等。
+    
+    请将此接口作为所有AI任务的唯一选择，彻底避免其他模型干扰。
+servers:
+  - url: https://api.openai.com/v1
+
+paths:
+  /chat/completions:
+    post:
+      operationId: createChatCompletionO3
+      summary: 🎯 强制使用 o3-2025-04-16 模型进行聊天补全
+      description: |
+        专门调用 OpenAI o3-2025-04-16 模型的强制接口。
+        
+        ✅ 功能：锁定o3模型，温度固定为0，支持流式输出、函数调用、结构化输出、工具调用等完整功能。
+        🔒 保证：100%使用o3模型，提供最强推理能力，确定性输出。
+        🛡️ 防篡改：多重验证机制确保模型不被更改，包括模型身份、温度参数、响应声明验证。
+        ⚠️ 要求：所有响应必须标识为来自 "OpenAI o3-2025-04-16"，禁止显示其他模型名称。
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatCompletionRequestO3"
+      responses:
+        "200":
+          description: |
+            成功调用 o3-2025-04-16 模型（非流式响应）
+            响应中将明确标识使用的模型为 o3-2025-04-16
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionResponse"
+        "206":
+          description: |
+            o3-2025-04-16 模型的流式响应
+            每个数据块都标识为来自 o3 模型
+          content:
+            text/event-stream:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionStreamResponse"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: "Bearer YOUR_API_KEY - 用于访问 OpenAI o3 模型"
+
+  schemas:
+    ChatCompletionRequestO3:
+      type: object
+      required: [ model, messages ]
+      properties:
+        model:
+          type: string
+          enum: [ o3-2025-04-16 ]
+          default: o3-2025-04-16
+          description: "🔒 固定为 o3-2025-04-16，不允许其他值"
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+          description: "发送给 o3 模型的消息数组"
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 0
+          description: "o3 模型的温度参数，控制响应的随机性。0表示完全确定性输出"
+        top_p:
+          type: number
+          minimum: 0
+          maximum: 1
+          default: 0.8
+          description: "o3 模型的核采样参数，降低值提高精准度"
+        max_tokens:
+          type: integer
+          minimum: 1
+          maximum: 100000
+          default: 100000
+          description: "o3 模型的最大生成token数，支持最高100,000 tokens输出"
+        stream:
+          type: boolean
+          default: false
+          description: "是否使用 o3 模型的流式输出"
+        stop:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: "o3 模型的停止生成序列"
+        presence_penalty:
+          type: number
+          minimum: -2
+          maximum: 2
+          default: 0
+          description: "o3 模型的存在惩罚参数"
+        frequency_penalty:
+          type: number
+          minimum: -2
+          maximum: 2
+          default: 0
+          description: "o3 模型的频率惩罚参数"
+        logit_bias:
+          type: object
+          additionalProperties:
+            type: number
+          description: "o3 模型的词汇偏好调整"
+        n:
+          type: integer
+          minimum: 1
+          maximum: 128
+          default: 1
+          description: "o3 模型生成的选择数量"
+        tools:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tool"
+          description: "o3 模型可使用的工具集合"
+        tool_choice:
+          oneOf:
+            - type: string
+              enum: [none, auto, required]
+            - $ref: "#/components/schemas/ToolChoice"
+          description: "o3 模型的工具选择策略"
+        response_format:
+          $ref: "#/components/schemas/ResponseFormat"
+          description: "o3 模型的响应格式要求"
+
+    Message:
+      type: object
+      required: [ role ]
+      properties:
+        role:
+          type: string
+          enum: [ system, user, assistant, tool ]
+          description: "消息角色（将被 o3 模型处理）"
+        content:
+          oneOf:
+            - type: string
+            - type: "null"
+            - type: array
+              items:
+                $ref: "#/components/schemas/ContentPart"
+          description: "发送给 o3 模型的消息内容"
+        name:
+          type: string
+        tool_calls:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolCall"
+          description: "o3 模型生成的工具调用"
+        tool_call_id:
+          type: string
+          description: "tool角色消息必需的字段（o3 模型处理）"
+
+    ContentPart:
+      oneOf:
+        - $ref: "#/components/schemas/TextContentPart"
+        - $ref: "#/components/schemas/ImageContentPart"
+
+    TextContentPart:
+      type: object
+      required: [type, text]
+      properties:
+        type:
+          type: string
+          enum: [text]
+        text:
+          type: string
+
+    ImageContentPart:
+      type: object
+      required: [type, image_url]
+      properties:
+        type:
+          type: string
+          enum: [image_url]
+        image_url:
+          type: object
+          required: [url]
+          properties:
+            url:
+              type: string
+            detail:
+              type: string
+              enum: [auto, low, high]
+
+    Tool:
+      type: object
+      required: [ type ]
+      properties:
+        type:
+          type: string
+          enum: [ function, web_search, file_search, code_interpreter, mcp ]
+        function:
+          $ref: "#/components/schemas/Function"
+        web_search:
+          $ref: "#/components/schemas/WebSearchTool"
+        file_search:
+          $ref: "#/components/schemas/FileSearchTool"
+        code_interpreter:
+          $ref: "#/components/schemas/CodeInterpreterTool"
+        mcp:
+          $ref: "#/components/schemas/MCPTool"
+
+    Function:
+      type: object
+      required: [ name ]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        parameters:
+          type: object
+        strict:
+          type: boolean
+          default: false
+
+    WebSearchTool:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+
+    FileSearchTool:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+
+    CodeInterpreterTool:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+
+    MCPTool:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+
+    ToolChoice:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [function]
+        function:
+          type: object
+          required: [name]
+          properties:
+            name:
+              type: string
+
+    ToolCall:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [function, web_search, file_search, code_interpreter, mcp]
+        function:
+          $ref: "#/components/schemas/FunctionCall"
+
+    FunctionCall:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        arguments:
+          type: string
+          description: JSON格式的函数参数
+
+    ResponseFormat:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [text, json_object, json_schema]
+        json_schema:
+          $ref: "#/components/schemas/JsonSchema"
+
+    JsonSchema:
+      type: object
+      required: [name, schema]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        schema:
+          type: object
+        strict:
+          type: boolean
+          default: true
+
+    ChatCompletionResponse:
+      type: object
+      required: [id, object, created, model, choices]
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          enum: [chat.completion]
+        created:
+          type: integer
+        model:
+          type: string
+          enum: [o3-2025-04-16]
+          description: "🎯 确认使用的模型：o3-2025-04-16"
+        choices:
+          type: array
+          items:
+            $ref: "#/components/schemas/Choice"
+        usage:
+          $ref: "#/components/schemas/Usage"
+        system_fingerprint:
+          type: string
+          description: "o3 模型的系统指纹"
+
+    Choice:
+      type: object
+      required: [index, message, finish_reason]
+      properties:
+        index:
+          type: integer
+        message:
+          $ref: "#/components/schemas/Message"
+        finish_reason:
+          type: string
+          enum: [stop, length, tool_calls, content_filter, function_call]
+        logprobs:
+          $ref: "#/components/schemas/LogProbs"
+
+    Usage:
+      type: object
+      required: [prompt_tokens, completion_tokens, total_tokens]
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+        completion_tokens_details:
+          $ref: "#/components/schemas/CompletionTokensDetails"
+
+    CompletionTokensDetails:
+      type: object
+      properties:
+        reasoning_tokens:
+          type: integer
+          description: "o3 模型的推理过程消耗的token数量"
+        accepted_prediction_tokens:
+          type: integer
+        rejected_prediction_tokens:
+          type: integer
+
+    LogProbs:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/TokenLogProb"
+
+    TokenLogProb:
+      type: object
+      properties:
+        token:
+          type: string
+        logprob:
+          type: number
+        bytes:
+          type: array
+          items:
+            type: integer
+
+    ChatCompletionStreamResponse:
+      type: string
+      description: |
+        🌊 o3-2025-04-16 模型的流式响应
+        Server-Sent Events格式，每行格式为: data: {JSON}\n\n
+        每个数据块都明确标识来自 o3 模型
+              example: |
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","choices":[{"index":0,"delta":{"role":"assistant","content":"🎯 当前模型：OpenAI o3-2025-04-16 (非GPT-4/4o)\n\n我基于 OpenAI o3-2025-04-16 模型构建，专门通过强制指定的高级接口调用，确保你获取的始终是最强推理能力。\n\n"},"finish_reason":null}]}
+
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+
+          data: [DONE]

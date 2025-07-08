@@ -1,0 +1,33 @@
+{
+  "name": "O3 Model Validator with Linear Integration",
+  "version": "2.0.0",
+  "description": "强制使用OpenAI o3-2025-04-16模型的验证器，集成Linear项目管理和高级监控",
+  "build_time": "2025-07-08T21:33:51.889Z",
+  "commit_hash": "local",
+  "features": [
+    "O3 Model Validation (Temperature=0)",
+    "Advanced Real-time Monitoring",
+    "Linear API Integration",
+    "Performance Caching System",
+    "Interactive Dashboard",
+    "Error Tracking & Reporting",
+    "Security Headers",
+    "Production Optimizations"
+  ],
+  "endpoints": {
+    "main": "https://aiylt.github.io",
+    "api": "https://aiylt.github.io/.well-known/openapi.yaml",
+    "monitoring": "Real-time dashboard on page"
+  },
+  "linear_integration": {
+    "enabled": true,
+    "api_key_configured": true,
+    "supported_operations": [
+      "create_issue",
+      "search_issues",
+      "update_issue",
+      "get_teams",
+      "analytics"
+    ]
+  }
+}
