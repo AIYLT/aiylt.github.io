@@ -2,8 +2,8 @@
   "schema_version": "v1",
   "name_for_model": "o3_fixed_plugin",
   "name_for_human": "O3 Fixed Model Plugin",
-  "description_for_model": "Call OpenAI Chat Completions API with model=o3 enforced. Every response must begin with: \"Current model: OpenAI o3\".",
-  "description_for_human": "A plugin that always uses the OpenAI GPT-O3 model. The model is fixed and cannot be changed.",
+  "description_for_model": "Call OpenAI Chat Completions API with model=o3-2025-04-16 enforced. Every response must begin with: \"Current model: OpenAI o3-2025-04-16\".",
+  "description_for_human": "A plugin that always uses the OpenAI o3-2025-04-16 model. The model is fixed and cannot be changed.",
   "auth": {
     "type": "service_http",
     "authorization_type": "bearer"
