@@ -95,7 +95,7 @@ components:
           type: integer
           minimum: 1
           maximum: 100000
-          default: 8192
+          default: 100000
           description: o3-2025-04-16 模型的最大生成token数，支持最高100,000 tokens输出
         stream:
           type: boolean
