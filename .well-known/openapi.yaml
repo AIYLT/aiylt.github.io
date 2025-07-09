@@ -66,14 +66,16 @@ paths:
                           properties:
                             title:
                               type: string
+                              description: "任务标题"
                             description:
                               type: string
+                              description: "任务描述"
                             teamId:
                               type: string
-                              default: ZJF1688
+                              description: "Linear Team ID - 必须提供实际的Team ID"
                             apiKey:
                               type: string
-                              default: YOUR_LINEAR_API_KEY
+                              description: "Linear API Key - 必须提供有效的API密钥"
       responses:
         "200":
           description: |
@@ -239,21 +241,26 @@ components:
               default: "將任務寫入 Linear 系統"
             parameters:
               type: object
-              required: [title, description, teamId, apiKey]
+              required: [title, description, teamId, apiKey, status]
               properties:
                 title:
                   type: string
+                  description: "任务标题 - 必填字段"
                 description:
                   type: string
+                  description: "任务描述 - 必填字段"
                 dueDate:
                   type: string
                   format: date-time
+                  description: "截止日期 (ISO 8601格式，如：2025-07-09T09:00:00Z)"
                 priority:
                   type: integer
-                  description: "0 = 無, 1 = 低, 2 = 中, 3 = 高"
+                  description: "优先级：0=无, 1=低, 2=中, 3=高 (默认为1)"
+                  default: 1
                 status:
                   type: string
-                  description: "Todo, In Progress, Done"
+                  description: "任务状态：Todo, In Progress, Done - 必填字段"
+                  default: "Todo"
                 assigneeId:
                   type: string
                 labelIds:
@@ -285,10 +292,10 @@ components:
                         type: string
                 teamId:
                   type: string
-                  default: ZJF1688
+                  description: "Linear Team ID - 必须在调用时提供实际的Team ID"
                 apiKey:
                   type: string
-                  default: YOUR_LINEAR_API_KEY
+                  description: "Linear API Key - 必须在调用时提供有效的API密钥"
             handler:
               type: object
               required: [url, method, headers, body]
