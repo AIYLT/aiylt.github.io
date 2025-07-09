@@ -1,0 +1,810 @@
+openapi: 3.1.0
+info:
+  title: O3 Stock Analysis System - Multi-Level Performance Edition
+  version: "6.0.0"
+  description: |
+    **🎯 o3股票分析系统 - 分级性能版 (基于真实o3定价)**
+
+    ## 🚀 五级性能配置
+    
+    | 级别 | 成本/次 | 月费(50次) | 适用场景 | 配置规格 |
+    |------|---------|------------|----------|----------|
+    | ⚡ Lightning | $0.03 | $1.50 | 快速验证、简单查询 | 14k tokens, 3工具 |
+    | 🚀 Turbo | $0.10 | $5.00 | 标准分析、日常交易 | 40k tokens, 6工具 |
+    | 🔥 Pro | $0.22 | $11.00 | 深度分析、策略制定 | 82k tokens, 10工具 |
+    | 💎 Elite | $0.41 | $20.50 | 机构级分析、重大决策 | 140k tokens, 13工具 |
+    | 🌟 Ultimate | $0.65 | $32.50 | 极限分析、研究报告 | 200k tokens, 15工具 |
+
+    ## 🔥 核心功能特性
+    - **🔒 模型锁定**: o3-2025-04-16 (200k上下文 + 100k输出 + 推理令牌支持)
+    - **📊 智能分级**: 根据需求自动推荐或手动选择性能级别
+    - **🚀 并行执行**: 每级别优化的工具并行调用
+    - **⏰ 多时间维度**: 从1分钟到月线的完整技术分析
+    - **📰 实时新闻**: 自动抓取 + AI情感分析 + 影响力评分
+    - **🎯 五层响应**: 推理→分析→策略→风控→用户展示
+    - **💰 成本透明**: 基于OpenAI官方定价的精确计算
+    - **🔧 灵活配置**: 支持自动升级和预算控制
+    - **✅ 标准兼容**: 完全兼容OpenAI Chat Completions API
+
+servers:
+  - url: https://api.openai.com/v1
+    description: OpenAI API v1
+
+paths:
+  /chat/completions:
+    post:
+      operationId: createChatCompletionO3MultiLevel
+      summary: o3股票分析系统 - 多级别配置
+      description: |
+        **🎯 智能分级股票分析系统**
+        
+        支持5个性能级别，用户可根据分析需求、成本预算选择：
+        - 自动检测并推荐最适合的级别
+        - 手动指定performance_level参数
+        - 支持预算控制和自动升级
+        - 完全基于OpenAI o3官方定价
+        
+        **📊 自动触发机制**:
+        - 简单文字查询 → Lightning
+        - 单张股票图片 → Turbo  
+        - 多张图片+复杂问题 → Pro
+        - 大量数据+深度分析 → Elite
+        - 研究级别+创新要求 → Ultimate
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatCompletionRequest"
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                messages:
+                  type: string
+                  description: "JSON格式的消息数组"
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                performance_level:
+                  type: string
+                  enum: [lightning, turbo, pro, elite, ultimate, auto]
+                  default: auto
+      responses:
+        "200":
+          description: 成功响应 - 五层结构化分析结果
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionResponse"
+              examples:
+                lightning_example:
+                  summary: "Lightning模式 - 快速分析示例"
+                  value:
+                    id: "chatcmpl-lightning-123"
+                    object: "chat.completion"
+                    created: 1677652288
+                    model: "o3-2025-04-16"
+                    choices:
+                      - index: 0
+                        message:
+                          role: "assistant"
+                          content:
+                            reasoning: "快速扫描NVDA技术指标：RSI=1.0超买，但动量依然强劲，ADX=43.97显示强趋势。"
+                            analysis: "📊 NVDA技术分析摘要：超买但趋势强劲，成交量放大验证突破。"
+                            strategy: "💡 操作建议：谨慎看多，158.70附近小幅加仓，止损154.00。"
+                            risk_management: "⚠️ 风险提示：短期超买，注意技术性调整。"
+                            final_answer: "当前模型：OpenAI o3-2025-04-16\n\n⚡ Lightning快速分析：NVDA超买但趋势强劲，建议158.70小幅加仓，止损154.00。成本：$0.03"
+                        finish_reason: "stop"
+                    usage:
+                      prompt_tokens: 10000
+                      completion_tokens: 4000
+                      total_tokens: 14000
+                      reasoning_tokens: 2000
+                    metadata:
+                      performance_level: "lightning"
+                      estimated_cost: 0.03
+                      analysis_duration: 3.2
+                      tools_used: ["basic_technical", "simple_news", "risk_calculator"]
+                ultimate_example:
+                  summary: "Ultimate模式 - 极限分析示例"
+                  value:
+                    id: "chatcmpl-ultimate-456"
+                    object: "chat.completion"
+                    created: 1677652288
+                    model: "o3-2025-04-16"
+                    choices:
+                      - index: 0
+                        message:
+                          role: "assistant"
+                          content:
+                            reasoning: "启动o3超级推理引擎...50k推理令牌深度分析：检测到NVDA多模态输入，激活15工具超级并行。技术面：RSI多周期共振，ADX强趋势确认，布林带突破验证。基本面：AI芯片龙头地位，Q4业绩超预期。资金面：机构大幅增持，北向资金净流入。消息面：利好消息井喷，分析师集体上调目标价。风险面：短期超买但可控。综合50+维度分析，强烈看好。"
+                            analysis: "🔥 NVDA终极全维度分析：技术面多指标共振突破，基本面AI龙头地位稳固，资金面机构大幅增持，消息面利好密集，风险面短期超买可控。15工具并行深度扫描，50+技术指标，14个机器学习模型，全球市场关联分析，实时新闻情感追踪。"
+                            strategy: "💡 终极操作策略矩阵：激进型158.70加仓20%目标185-200，稳健型减仓10%分批布局，保守型减仓40%等待回调。量化策略网格交易155-165，期权策略买入160C杠杆博弈。精确点位：支撑155.50/152.00，阻力160.00/165.00/172.00。"
+                            risk_management: "⚠️ 超级风险管控：VaR日损失4.2%，压力测试极端回撤12%，智能止损154.00，动态对冲策略，实时监控预警，应急响应预案四级防护。"
+                            final_answer: "当前模型：OpenAI o3-2025-04-16 🧠✨\n\n🌟 Ultimate极限分析：NVDA A+强烈推荐，技术+基本+资金+消息四维共振突破。激进者158.70加仓20%目标200，稳健者分批布局，保守者适度减仓。止损154.00，15工具深度分析置信度94.2%。成本：$0.65"
+                        finish_reason: "stop"
+                    usage:
+                      prompt_tokens: 50000
+                      completion_tokens: 100000
+                      total_tokens: 200000
+                      reasoning_tokens: 50000
+                    metadata:
+                      performance_level: "ultimate"
+                      estimated_cost: 0.65
+                      analysis_duration: 45.8
+                      tools_used: ["ultimate_stock_engine", "super_news_analyzer", "quantitative_predictor", "risk_manager", "strategy_optimizer", "market_monitor", "sentiment_analyzer", "option_analyzer", "macro_tracker", "correlation_engine", "pattern_recognizer", "backtest_engine", "visualization_generator", "report_generator", "decision_orchestrator"]
+                      confidence_score: 0.942
+                      reasoning_quality: 0.96
+        "206":
+          description: 流式响应 - 实时分析过程展示
+          content:
+            text/event-stream:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionStreamResponse"
+        "400":
+          description: 请求错误
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: 认证失败
+        "429":
+          description: 请求频率限制
+        "500":
+          description: 服务器错误
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: "Bearer YOUR_OPENAI_API_KEY"
+
+  schemas:
+    ChatCompletionRequest:
+      type: object
+      required: [model, messages]
+      properties:
+        model:
+          type: string
+          enum: [o3-2025-04-16]
+          default: o3-2025-04-16
+          description: "锁定o3-2025-04-16模型"
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+          description: "对话消息数组，支持文本和图像"
+        performance_level:
+          type: string
+          enum: [lightning, turbo, pro, elite, ultimate, auto]
+          default: auto
+          description: |
+            性能级别选择:
+            - lightning: $0.03/次，快速验证
+            - turbo: $0.10/次，标准分析  
+            - pro: $0.22/次，深度分析
+            - elite: $0.41/次，机构级分析
+            - ultimate: $0.65/次，极限分析
+            - auto: 自动检测推荐
+        auto_upgrade:
+          type: boolean
+          default: false
+          description: "是否允许自动升级到更高级别"
+        budget_limit:
+          type: number
+          minimum: 0.01
+          maximum: 10.0
+          description: "单次调用预算上限(美元)"
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 1.0
+          description: "0"
+        top_p:
+          type: number
+          minimum: 0.1
+          maximum: 0.95
+          description: "0.5"
+        max_tokens:
+          type: integer
+          minimum: 1
+          maximum: 100000
+          description: "最大输出令牌，根据级别自动设置"
+        max_reasoning_tokens:
+          type: integer
+          minimum: 0
+          maximum: 50000
+          description: "最大推理令牌，根据级别自动设置"
+        stream:
+          type: boolean
+          default: false
+          description: "是否启用流式输出"
+        tools:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tool"
+          description: "工具配置，根据级别自动选择"
+        tool_choice:
+          oneOf:
+            - type: string
+              enum: [none, auto, required]
+            - $ref: "#/components/schemas/ToolChoice"
+          default: auto
+          description: "工具选择策略"
+
+    Message:
+      type: object
+      required: [role, content]
+      properties:
+        role:
+          type: string
+          enum: [system, user, assistant, tool]
+          description: "消息角色"
+        content:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                $ref: "#/components/schemas/ContentPart"
+          description: "消息内容，支持文本和多模态"
+        name:
+          type: string
+          description: "消息发送者名称"
+        tool_calls:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolCall"
+          description: "工具调用"
+        tool_call_id:
+          type: string
+          description: "工具调用ID"
+
+    ContentPart:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [text, image_url]
+        text:
+          type: string
+          description: "文本内容"
+        image_url:
+          type: object
+          properties:
+            url:
+              type: string
+              description: "图像URL或base64数据"
+            detail:
+              type: string
+              enum: [low, high, auto]
+              default: auto
+              description: "图像分析精度"
+
+    Tool:
+      type: object
+      required: [type, function]
+      properties:
+        type:
+          type: string
+          enum: [function]
+        function:
+          $ref: "#/components/schemas/FunctionDefinition"
+
+    FunctionDefinition:
+      type: object
+      required: [name, description]
+      properties:
+        name:
+          type: string
+          description: "函数名称"
+        description:
+          type: string
+          description: "函数描述"
+        parameters:
+          type: object
+          description: "函数参数schema"
+
+    ToolChoice:
+      type: object
+      required: [type, function]
+      properties:
+        type:
+          type: string
+          enum: [function]
+        function:
+          type: object
+          required: [name]
+          properties:
+            name:
+              type: string
+
+    ToolCall:
+      type: object
+      required: [id, type, function]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [function]
+        function:
+          type: object
+          required: [name, arguments]
+          properties:
+            name:
+              type: string
+            arguments:
+              type: string
+
+    ChatCompletionResponse:
+      type: object
+      required: [id, object, created, model, choices]
+      properties:
+        id:
+          type: string
+          description: "响应唯一标识"
+        object:
+          type: string
+          enum: [chat.completion]
+        created:
+          type: integer
+          description: "创建时间戳"
+        model:
+          type: string
+          enum: [o3-2025-04-16]
+        choices:
+          type: array
+          items:
+            $ref: "#/components/schemas/Choice"
+        usage:
+          $ref: "#/components/schemas/Usage"
+        metadata:
+          $ref: "#/components/schemas/ResponseMetadata"
+
+    Choice:
+      type: object
+      required: [index, message, finish_reason]
+      properties:
+        index:
+          type: integer
+        message:
+          type: object
+          required: [role, content]
+          properties:
+            role:
+              type: string
+              enum: [assistant]
+            content:
+              type: object
+              required: [reasoning, analysis, strategy, risk_management, final_answer]
+              description: "五层结构化响应"
+              properties:
+                reasoning:
+                  type: string
+                  description: "推理层：深度思考过程(仅高级别)"
+                analysis:
+                  type: string
+                  description: "分析层：技术+基本面详细分析"
+                strategy:
+                  type: string
+                  description: "策略层：具体操作建议和策略"
+                risk_management:
+                  type: string
+                  description: "风控层：风险评估和管理方案"
+                final_answer:
+                  type: string
+                  description: "用户层：简洁明确的最终结论"
+            tool_calls:
+              type: array
+              items:
+                $ref: "#/components/schemas/ToolCall"
+        finish_reason:
+          type: string
+          enum: [stop, length, tool_calls, content_filter]
+
+    ChatCompletionStreamResponse:
+      type: object
+      required: [id, object, created, model, choices]
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          enum: [chat.completion.chunk]
+        created:
+          type: integer
+        model:
+          type: string
+          enum: [o3-2025-04-16]
+        choices:
+          type: array
+          items:
+            type: object
+            required: [index, delta]
+            properties:
+              index:
+                type: integer
+              delta:
+                type: object
+                properties:
+                  role:
+                    type: string
+                    enum: [assistant]
+                  content:
+                    type: object
+                    properties:
+                      reasoning:
+                        type: string
+                      analysis:
+                        type: string
+                      strategy:
+                        type: string
+                      risk_management:
+                        type: string
+                      final_answer:
+                        type: string
+                  tool_calls:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ToolCall"
+              finish_reason:
+                type: string
+                enum: [stop, length, tool_calls, content_filter]
+
+    Usage:
+      type: object
+      required: [prompt_tokens, completion_tokens, total_tokens]
+      properties:
+        prompt_tokens:
+          type: integer
+          description: "输入令牌数"
+        completion_tokens:
+          type: integer
+          description: "输出令牌数"
+        total_tokens:
+          type: integer
+          description: "总令牌数"
+        reasoning_tokens:
+          type: integer
+          description: "推理令牌数(o3特有)"
+
+    ResponseMetadata:
+      type: object
+      properties:
+        performance_level:
+          type: string
+          enum: [lightning, turbo, pro, elite, ultimate]
+          description: "实际使用的性能级别"
+        estimated_cost:
+          type: number
+          description: "预估成本(美元)"
+        analysis_duration:
+          type: number
+          description: "分析耗时(秒)"
+        tools_used:
+          type: array
+          items:
+            type: string
+          description: "使用的工具列表"
+        confidence_score:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: "分析置信度"
+        reasoning_quality:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: "推理质量评分"
+        auto_upgrade_triggered:
+          type: boolean
+          description: "是否触发了自动升级"
+        budget_exceeded:
+          type: boolean
+          description: "是否超出预算限制"
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [message, type]
+          properties:
+            message:
+              type: string
+              description: "错误详细信息"
+            type:
+              type: string
+              enum: [invalid_request_error, api_error, permission_error, rate_limit_error, server_error]
+              description: "错误类型"
+            code:
+              type: string
+              description: "错误代码"
+            param:
+              type: string
+              description: "引起错误的参数名"
+      example:
+        error:
+          message: "Request would exceed budget limit of $0.50. Estimated cost: $0.65. Please increase budget_limit or choose a lower performance level."
+          type: "invalid_request_error"
+          code: "budget_exceeded"
+          param: "performance_level"
+
+  parameters:
+    PerformanceLevel:
+      name: performance_level
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [lightning, turbo, pro, elite, ultimate, auto]
+        default: auto
+      description: "性能级别选择"
+
+    BudgetLimit:
+      name: budget_limit
+      in: query
+      required: false
+      schema:
+        type: number
+        minimum: 0.01
+        maximum: 10.0
+      description: "单次调用预算上限(美元)"
+
+  examples:
+    StockAnalysisMultiModal:
+      summary: "多模态股票分析示例"
+      description: "包含图片和文本的综合股票分析请求"
+      value:
+        model: "o3-2025-04-16"
+        messages:
+          - role: "user"
+            content:
+              - type: "text"
+                text: "请分析这张NVDA股票图表，给出技术分析和操作建议"
+              - type: "image_url"
+                image_url:
+                  url: "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+                  detail: "high"
+        performance_level: "auto"
+        auto_upgrade: true
+        budget_limit: 0.50
+        stream: false
+        temperature: 0.7
+        max_tokens: 50000
+        max_reasoning_tokens: 20000
+
+    QuickAnalysis:
+      summary: "快速分析示例"
+      description: "Lightning级别的快速股票查询"
+      value:
+        model: "o3-2025-04-16"
+        messages:
+          - role: "user"
+            content: "NVDA现在可以买入吗？"
+        performance_level: "lightning"
+        budget_limit: 0.05
+
+    DeepResearch:
+      summary: "深度研究示例"
+      description: "Ultimate级别的深度研究分析"
+      value:
+        model: "o3-2025-04-16"
+        messages:
+          - role: "user"
+            content:
+              - type: "text"
+                text: "请对NVDA进行机构级深度研究分析，包括技术面、基本面、资金面、消息面的全维度评估，并生成详细的投资研究报告"
+              - type: "image_url"
+                image_url:
+                  url: "data:image/jpeg;base64,..."
+                  detail: "high"
+        performance_level: "ultimate"
+        auto_upgrade: false
+        budget_limit: 1.00
+        stream: true
+        temperature: 0.8
+        max_tokens: 100000
+        max_reasoning_tokens: 50000
+
+  headers:
+    X-RateLimit-Limit:
+      description: "每分钟请求限制"
+      schema:
+        type: integer
+        example: 60
+    X-RateLimit-Remaining:
+      description: "剩余请求次数"
+      schema:
+        type: integer
+        example: 45
+    X-RateLimit-Reset:
+      description: "限制重置时间戳"
+      schema:
+        type: integer
+        example: 1677652288
+    X-Request-ID:
+      description: "请求唯一标识"
+      schema:
+        type: string
+        example: "req-12345678-abcd-1234-efgh-567890123456"
+
+  requestBodies:
+    ChatCompletionRequest:
+      description: "聊天完成请求体"
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ChatCompletionRequest"
+          examples:
+            lightning_analysis:
+              $ref: "#/components/examples/QuickAnalysis"
+            multimodal_analysis:
+              $ref: "#/components/examples/StockAnalysisMultiModal"
+            deep_research:
+              $ref: "#/components/examples/DeepResearch"
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              messages:
+                type: string
+                description: "JSON格式的消息数组"
+              files:
+                type: array
+                items:
+                  type: string
+                  format: binary
+                description: "上传的图片文件"
+              performance_level:
+                type: string
+                enum: [lightning, turbo, pro, elite, ultimate, auto]
+                default: auto
+              budget_limit:
+                type: number
+                minimum: 0.01
+                maximum: 10.0
+
+  responses:
+    SuccessResponse:
+      description: "成功响应"
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+        X-RateLimit-Limit:
+          $ref: "#/components/headers/X-RateLimit-Limit"
+        X-RateLimit-Remaining:
+          $ref: "#/components/headers/X-RateLimit-Remaining"
+        X-RateLimit-Reset:
+          $ref: "#/components/headers/X-RateLimit-Reset"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ChatCompletionResponse"
+
+    StreamResponse:
+      description: "流式响应"
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+      content:
+        text/event-stream:
+          schema:
+            $ref: "#/components/schemas/ChatCompletionStreamResponse"
+
+    ErrorResponse:
+      description: "错误响应"
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+tags:
+  - name: "股票分析"
+    description: "股票技术分析和投资建议"
+    externalDocs:
+      description: "详细使用说明"
+      url: "https://aiylt.github.io/.well-known/instructions.md"
+  - name: "多模态分析"
+    description: "支持图像、文本等多种输入模式"
+  - name: "分级配置"
+    description: "五个性能级别的灵活配置"
+  - name: "成本控制"
+    description: "透明的成本计算和预算控制"
+
+externalDocs:
+  description: "完整的API使用指南和最佳实践"
+  url: "https://aiylt.github.io/.well-known/instructions.md"
+
+# Performance Level Configuration Matrix
+x-performance-levels:
+  lightning:
+    cost_per_call: 0.03
+    monthly_cost_50_calls: 1.50
+    tokens: { input: 10000, output: 4000, reasoning: 2000, total: 14000 }
+    tools: 3
+    duration: "3-8s"
+    use_cases: ["快速验证", "简单查询", "实时监控"]
+    recommended_for: ["个人投资者日常监控"]
+  turbo:
+    cost_per_call: 0.10
+    monthly_cost_50_calls: 5.00
+    tokens: { input: 20000, output: 15000, reasoning: 5000, total: 40000 }
+    tools: 6
+    duration: "8-15s"
+    use_cases: ["标准分析", "日常交易", "技术分析"]
+    recommended_for: ["个人投资者买卖决策"]
+  pro:
+    cost_per_call: 0.22
+    monthly_cost_50_calls: 11.00
+    tokens: { input: 35000, output: 35000, reasoning: 12000, total: 82000 }
+    tools: 10
+    duration: "15-25s"
+    use_cases: ["深度分析", "策略制定", "组合管理"]
+    recommended_for: ["专业交易员标准分析", "个人投资者重要操作"]
+  elite:
+    cost_per_call: 0.41
+    monthly_cost_50_calls: 20.50
+    tokens: { input: 50000, output: 65000, reasoning: 25000, total: 140000 }
+    tools: 13
+    duration: "25-40s"
+    use_cases: ["机构级分析", "重大决策", "风险建模"]
+    recommended_for: ["专业交易员重大决策", "机构用户常规分析"]
+  ultimate:
+    cost_per_call: 0.65
+    monthly_cost_50_calls: 32.50
+    tokens: { input: 50000, output: 100000, reasoning: 50000, total: 200000 }
+    tools: 15
+    duration: "40-60s"
+    use_cases: ["极限分析", "研究报告", "AI探索"]
+    recommended_for: ["机构用户战略决策", "研究创新"]
+
+# Auto-Detection Rules
+x-auto-detection:
+  rules:
+    - condition: "单一文本查询 < 50字符"
+      recommendation: "lightning"
+      reasoning: "简单快速查询"
+    - condition: "单张图片 + 基础问题"
+      recommendation: "turbo"
+      reasoning: "标准图表分析"
+    - condition: "多张图片 OR 复杂文本查询"
+      recommendation: "pro"
+      reasoning: "深度对比分析"
+    - condition: "大量数据 OR 机构级需求"
+      recommendation: "elite"
+      reasoning: "专业级别分析"
+    - condition: "研究报告 OR 创新要求"
+      recommendation: "ultimate"
+      reasoning: "极限性能需求"
+
+# Cost Calculation Examples
+x-cost-examples:
+  lightning_breakdown:
+    input_tokens: { count: 10000, cost_per_1M: 1.00, subtotal: 0.01 }
+    output_tokens: { count: 4000, cost_per_1M: 4.00, subtotal: 0.016 }
+    reasoning_tokens: { count: 2000, cost_per_1M: 4.00, subtotal: 0.008 }
+    total_cost: 0.034
+    rounded_cost: 0.03
+  ultimate_breakdown:
+    input_tokens: { count: 50000, cost_per_1M: 1.00, subtotal: 0.05 }
+    output_tokens: { count: 100000, cost_per_1M: 4.00, subtotal: 0.40 }
+    reasoning_tokens: { count: 50000, cost_per_1M: 4.00, subtotal: 0.20 }
+    total_cost: 0.65
+    rounded_cost: 0.65
+
+# END OF OPENAPI.YAML - 文件结构已完整闭合，如需扩展请在此处继续。
