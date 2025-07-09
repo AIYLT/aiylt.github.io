@@ -29,8 +29,6 @@ info:
 servers:
   - url: https://api.openai.com/v1
     description: OpenAI API v1
-  - url: https://api.openai.com/v2  
-    description: OpenAI API v2 (if available)
 
 paths:
   /chat/completions:
@@ -535,30 +533,12 @@ components:
             param:
               type: string
               description: "引起错误的参数名"
-      examples:
-        budget_exceeded:
-          summary: "预算超限错误"
-          value:
-            error:
-              message: "Request would exceed budget limit of $0.50. Estimated cost: $0.65. Please increase budget_limit or choose a lower performance level."
-              type: "invalid_request_error"
-              code: "budget_exceeded"
-              param: "performance_level"
-        invalid_level:
-          summary: "无效性能级别"
-          value:
-            error:
-              message: "Invalid performance_level 'super_ultimate'. Valid options: lightning, turbo, pro, elite, ultimate, auto"
-              type: "invalid_request_error"
-              code: "invalid_parameter_value"
-              param: "performance_level"
-        rate_limit:
-          summary: "频率限制"
-          value:
-            error:
-              message: "Rate limit exceeded. Please wait 60 seconds before making another request."
-              type: "rate_limit_error"
-              code: "rate_limit_exceeded"
+      example:
+        error:
+          message: "Request would exceed budget limit of $0.50. Estimated cost: $0.65. Please increase budget_limit or choose a lower performance level."
+          type: "invalid_request_error"
+          code: "budget_exceeded"
+          param: "performance_level"
 
   parameters:
     PerformanceLevel:
