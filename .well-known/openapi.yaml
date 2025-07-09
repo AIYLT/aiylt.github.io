@@ -16,7 +16,7 @@ info:
     🎯 Top-p设定：强制设为0.5，禁止使用预设值或开放式创造型输出。
     📝 Linear集成：自动检测任务类语句并写入Linear系统。
     🗣️ 支援自然語言輸入任務模型會自動解析語義並使用 linear_task_writer 工具建立 Linear 任務用戶無需結構化輸入常見語句如記一下明天9點買車今天交報告等。
-    🧠 用戶可直接說「明天買車」、「下週交報告」，系統將自動提取 title, dueDate, priority 等欄位並補齊缺失欄位，確保成功寫入。模型會自動解析並填充所有欄位，無需手動輸入。例：「明天去公園玩」會自動解析為 title="去公園玩", dueDate="2025-07-09", priority=1，任何簡短指令如「去跑步」或「買菜」也會生成完整任務。
+    🧠 允許用戶說「明天買車」、「下週交報告」、「明天早上9點去買車」、「下週五交報告」、「今天帶爸爸去美國醫院看病」等自然語言語句，系統會自動解析 title（任務主題）、description（原始語句）、dueDate（時間資訊）、priority（優先級）等欄位。所有 Linear API 請求必須明確傳入 teamId 和 apiKey，系統不提供預設值，確保身份驗證安全。
     📌 强制要求：每次调用必须在响应开头声明："当前模型：OpenAI o3-2025-04-16"，经过技术验证。
     🛡️ 防篡改验证：内置多重验证机制，防止模型被意外或恶意更改。
     
@@ -50,7 +50,7 @@ paths:
                   model: o3-2025-04-16
                   messages:
                     - role: user
-                      content: "幫我記一下明天早上9點要去買車"
+                      content: "明天早上9點去買車"
                   tool_choice:
                     type: function
                     function:
@@ -62,20 +62,23 @@ paths:
                         description: "接收任務語句自動寫入 Linear"
                         parameters:
                           type: object
-                          required: [title, description, teamId, apiKey]
+                          required: [title, description, teamId, apiKey, status]
                           properties:
                             title:
                               type: string
-                              description: "任务标题"
+                              description: "任務標題，系統會自動從自然語言中抽取"
                             description:
                               type: string
-                              description: "任务描述"
+                              description: "任務說明，儲存用戶語句原文"
                             teamId:
                               type: string
-                              description: "Linear Team ID - 必须提供实际的Team ID"
+                              description: "Linear 團隊 ID，需由用戶傳入"
                             apiKey:
                               type: string
-                              description: "Linear API Key - 必须提供有效的API密钥"
+                              description: "Linear API 密鑰，需由用戶傳入"
+                            status:
+                              type: string
+                              description: "任務狀態，預設為 'Todo'"
       responses:
         "200":
           description: |
@@ -245,41 +248,49 @@ components:
               properties:
                 title:
                   type: string
-                  description: "任务标题 - 必填字段"
+                  description: "任務標題，系統會自動從自然語言中抽取 - 必填字段"
                 description:
                   type: string
-                  description: "任务描述 - 必填字段"
+                  description: "任務說明，儲存用戶語句原文 - 必填字段"
                 dueDate:
                   type: string
                   format: date-time
-                  description: "截止日期 (ISO 8601格式，如：2025-07-09T09:00:00Z)"
+                  description: "若句中含有時間，系統自動填入（格式為 ISO 8601，如：2025-07-09T09:00:00Z）"
                 priority:
                   type: integer
-                  description: "优先级：0=无, 1=低, 2=中, 3=高 (默认为1)"
+                  description: "若未指定，預設為 1（低）：0=无, 1=低, 2=中, 3=高"
                   default: 1
                 status:
                   type: string
-                  description: "任务状态：Todo, In Progress, Done - 必填字段"
+                  description: "任務狀態，預設為 'Todo' - 必填字段"
                   default: "Todo"
                 assigneeId:
                   type: string
+                  description: "指派給特定用戶的ID（可選）"
                 labelIds:
                   type: array
                   items:
                     type: string
+                  description: "任務標籤ID陣列（可選）"
                 projectId:
                   type: string
+                  description: "所屬專案ID（可選）"
                 cycleId:
                   type: string
+                  description: "所屬週期ID（可選）"
                 estimate:
                   type: integer
+                  description: "預估工時（可選）"
                 parentId:
                   type: string
+                  description: "父任務ID（可選）"
                 templateId:
                   type: string
+                  description: "使用的模板ID（可選）"
                 metadata:
                   type: object
                   additionalProperties: true
+                  description: "額外的元數據（可選）"
                 relations:
                   type: array
                   items:
@@ -290,12 +301,13 @@ components:
                         enum: [blocks, blocked_by, related, duplicate]
                       issueId:
                         type: string
+                  description: "任務關聯關係陣列（可選）"
                 teamId:
                   type: string
-                  description: "Linear Team ID - 必须在调用时提供实际的Team ID"
+                  description: "Linear 團隊 ID，需由用戶傳入 - 必填字段"
                 apiKey:
                   type: string
-                  description: "Linear API Key - 必须在调用时提供有效的API密钥"
+                  description: "Linear API 密鑰，需由用戶傳入 - 必填字段"
             handler:
               type: object
               required: [url, method, headers, body]
