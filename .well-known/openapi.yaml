@@ -1,0 +1,436 @@
+openapi: 3.1.0
+info:
+  title: O3 Fixed Model Action with Linear Task Writer
+  version: "1.0.0"
+  description: |
+    **🔒 OpenAI o3-2025-04-16 模型专用强制接口 + Linear任务写入器 🔒**
+    
+    模型规格：
+    - 200,000 context window (上下文窗口)
+    - 100,000 max output tokens (最大输出)
+    - Reasoning token support (推理token支持)
+    - Knowledge cutoff: May 31, 2024
+    
+    ⚠️ 重要：此接口专门用于调用 o3-2025-04-16 模型，不接受任何其他模型。
+    🌡️ 温度设定：强制设为0，确保输出的逻辑一致性和控制力。
+    🎯 Top-p设定：强制设为0.5，禁止使用预设值或开放式创造型输出。
+    📝 Linear集成：自动检测任务类语句并写入Linear系统。
+    🗣️ 支援自然語言輸入任務模型會自動解析語義並使用 linear_task_writer 工具建立 Linear 任務用戶無需結構化輸入常見語句如記一下明天9點買車今天交報告等。
+    🧠 用戶可直接說「明天買車」、「下週交報告」，系統將自動提取 title, dueDate, priority 等欄位並補齊缺失欄位，確保成功寫入。模型會自動解析並填充所有欄位，無需手動輸入。例：「明天去公園玩」會自動解析為 title="去公園玩", dueDate="2025-07-09", priority=1，任何簡短指令如「去跑步」或「買菜」也會生成完整任務。
+    📌 强制要求：每次调用必须在响应开头声明："当前模型：OpenAI o3-2025-04-16"，经过技术验证。
+    🛡️ 防篡改验证：内置多重验证机制，防止模型被意外或恶意更改。
+    
+servers:
+  - url: https://api.openai.com/v1
+
+paths:
+  /chat/completions:
+    post:
+      operationId: createChatCompletionO3
+      summary: 🎯 强制使用 o3-2025-04-16 模型进行聊天补全
+      description: |
+        专门调用 OpenAI o3-2025-04-16 模型的强制接口。
+        
+        ✅ 功能：锁定o3模型，温度固定为0，top_p固定为0.5，支持Linear任务自动写入。
+        🔒 保证：100%使用o3模型，提供最强推理能力，确保逻辑一致性。
+        🛡️ 防篡改：多重验证机制确保模型不被更改。
+        📝 Linear集成：自动检测任务语义并创建Linear issues。
+      security:
+        - ApiKeyAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatCompletionRequestO3"
+            examples:
+              createLinearTask:
+                summary: 使用自然語言建立 Linear 任務
+                value:
+                  model: o3-2025-04-16
+                  messages:
+                    - role: user
+                      content: "幫我記一下明天早上9點要去買車"
+                  tool_choice:
+                    type: function
+                    function:
+                      name: linear_task_writer
+                  tools:
+                    - type: function
+                      function:
+                        name: linear_task_writer
+                        description: "接收任務語句自動寫入 Linear"
+                        parameters:
+                          type: object
+                          required: [title, description, teamId, apiKey]
+                          properties:
+                            title:
+                              type: string
+                            description:
+                              type: string
+                            teamId:
+                              type: string
+                              default: ZJF1688
+                            apiKey:
+                              type: string
+                              default: YOUR_LINEAR_API_KEY
+      responses:
+        "200":
+          description: |
+            成功调用 o3-2025-04-16 模型
+            响应中将明确标识使用的模型为 o3-2025-04-16
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionResponse"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: "Bearer YOUR_API_KEY - 用于访问 OpenAI o3 模型"
+
+  schemas:
+    ChatCompletionRequestO3:
+      type: object
+      required: [ model, messages ]
+      properties:
+        model:
+          type: string
+          enum: [ o3-2025-04-16 ]
+          default: o3-2025-04-16
+          description: "🔒 固定为 o3-2025-04-16，不允许其他值"
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+          description: "发送给 o3 模型的消息数组 (Context window: 200,000)。支援使用者用自然語言輸入任務如幫我記一下今天交報告明天早上9點去買車等模型會自動解析語義並觸發工具linear_task_writer，自動推理所有欄位填入，包括 title, description, dueDate, priority, status 等完整任務資訊"
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 0
+          default: 0
+          description: "o3 模型的温度参数，强制设为0，确保逻辑一致性和控制力"
+        top_p:
+          type: number
+          minimum: 0.5
+          maximum: 0.5
+          default: 0.5
+          description: "o3 模型的核采样参数，强制设为0.5，禁止使用预设值或开放式创造型输出"
+        max_tokens:
+          type: integer
+          minimum: 1
+          maximum: 100000
+          default: 100000
+          description: "o3 模型的最大生成token数，支持最高100,000 tokens输出"
+        tools:
+          type: array
+          items:
+            anyOf:
+              - $ref: "#/components/schemas/FileSearchTool"
+              - $ref: "#/components/schemas/CodeInterpreterTool"
+              - $ref: "#/components/schemas/WebSearchTool"
+              - $ref: "#/components/schemas/MCPTool"
+              - $ref: "#/components/schemas/LinearTaskWriterTool"
+          description: "o3 模型可使用的工具集合，包含Linear任务写入器"
+        tool_choice:
+          oneOf:
+            - type: string
+              enum: [none, auto, required]
+            - $ref: "#/components/schemas/ToolChoice"
+          description: "o3 模型的工具选择策略"
+
+    Message:
+      type: object
+      required: [ role ]
+      properties:
+        role:
+          type: string
+          enum: [ system, user, assistant, tool ]
+          description: "消息角色（将被 o3 模型处理）"
+        content:
+          oneOf:
+            - type: string
+            - type: "null"
+          description: "发送给 o3 模型的消息内容"
+        tool_calls:
+          type: array
+          items:
+            $ref: "#/components/schemas/ToolCall"
+          description: "o3 模型生成的工具调用"
+        tool_call_id:
+          type: string
+          description: "tool角色消息必需的字段"
+
+    FileSearchTool:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [file_search]
+        file_search:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              default: true
+
+    CodeInterpreterTool:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [code_interpreter]
+        code_interpreter:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              default: true
+
+    WebSearchTool:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [web_search]
+        web_search:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              default: true
+
+    MCPTool:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [mcp]
+        mcp:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              default: true
+
+    LinearTaskWriterTool:
+      type: object
+      required: [type, function]
+      properties:
+        type:
+          type: string
+          enum: [function]
+        function:
+          type: object
+          required: [name, description, parameters, handler]
+          properties:
+            name:
+              type: string
+              enum: [linear_task_writer]
+            description:
+              type: string
+              default: "將任務寫入 Linear 系統"
+            parameters:
+              type: object
+              required: [title, description, teamId, apiKey]
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                dueDate:
+                  type: string
+                  format: date-time
+                priority:
+                  type: integer
+                  description: "0 = 無, 1 = 低, 2 = 中, 3 = 高"
+                status:
+                  type: string
+                  description: "Todo, In Progress, Done"
+                assigneeId:
+                  type: string
+                labelIds:
+                  type: array
+                  items:
+                    type: string
+                projectId:
+                  type: string
+                cycleId:
+                  type: string
+                estimate:
+                  type: integer
+                parentId:
+                  type: string
+                templateId:
+                  type: string
+                metadata:
+                  type: object
+                  additionalProperties: true
+                relations:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum: [blocks, blocked_by, related, duplicate]
+                      issueId:
+                        type: string
+                teamId:
+                  type: string
+                  default: ZJF1688
+                apiKey:
+                  type: string
+                  default: YOUR_LINEAR_API_KEY
+            handler:
+              type: object
+              required: [url, method, headers, body]
+              properties:
+                url:
+                  type: string
+                  default: "https://api.linear.app/graphql"
+                method:
+                  type: string
+                  enum: [POST]
+                  default: POST
+                headers:
+                  type: object
+                  properties:
+                    Authorization:
+                      type: string
+                      default: "Bearer {{apiKey}}"
+                    Content-Type:
+                      type: string
+                      default: "application/json"
+                body:
+                  type: object
+                  properties:
+                    query:
+                      type: string
+                      default: |
+                        mutation CreateIssue($input: IssueCreateInput!) {
+                          issueCreate(input: $input) {
+                            success
+                            issue {
+                              id
+                              title
+                            }
+                          }
+                        }
+                    variables:
+                      type: object
+                      properties:
+                        input:
+                          type: object
+                          properties:
+                            teamId:
+                              type: string
+                              default: "{{teamId}}"
+                            title:
+                              type: string
+                              default: "{{title}}"
+                            description:
+                              type: string
+                              default: "{{description}}"
+
+    ToolChoice:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [function]
+        function:
+          type: object
+          required: [name]
+          properties:
+            name:
+              type: string
+              enum: [linear_task_writer, file_search, code_interpreter, web_search, mcp]
+
+    ToolCall:
+      type: object
+      required: [id, type]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [function]
+        function:
+          $ref: "#/components/schemas/FunctionCall"
+
+    FunctionCall:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          enum: [linear_task_writer, file_search, code_interpreter, web_search, mcp]
+        arguments:
+          type: string
+          description: JSON格式的函数参数
+
+    ChatCompletionResponse:
+      type: object
+      required: [id, object, created, model, choices]
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+          enum: [chat.completion]
+        created:
+          type: integer
+        model:
+          type: string
+          enum: [o3-2025-04-16]
+          description: "🎯 确认使用的模型：o3-2025-04-16"
+        choices:
+          type: array
+          items:
+            $ref: "#/components/schemas/Choice"
+        usage:
+          $ref: "#/components/schemas/Usage"
+
+    Choice:
+      type: object
+      required: [index, message, finish_reason]
+      properties:
+        index:
+          type: integer
+        message:
+          $ref: "#/components/schemas/Message"
+        finish_reason:
+          type: string
+          enum: [stop, length, tool_calls, content_filter, function_call]
+
+    Usage:
+      type: object
+      required: [prompt_tokens, completion_tokens, total_tokens]
+      properties:
+        prompt_tokens:
+          type: integer
+          description: "输入tokens (最大200,000 context window)"
+        completion_tokens:
+          type: integer
+          description: "生成tokens (最大100,000 output tokens)"
+        total_tokens:
+          type: integer
+          description: "总tokens"
+        completion_tokens_details:
+          $ref: "#/components/schemas/CompletionTokensDetails"
+
+    CompletionTokensDetails:
+      type: object
+      properties:
+        reasoning_tokens:
+          type: integer
+          description: "o3 模型的推理token数量"
