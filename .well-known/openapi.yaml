@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: O3 Fixed Model Action
+  title: o3-2025-04-16 Model Action
   version: 1.0.0
   description: |
     **🔒 OpenAI o3-2025-04-16 模型专用强制接口 🔒**
@@ -13,7 +13,7 @@ info:
 
     ⚠️ 重要：此接口专门用于调用 o3-2025-04-16 模型，不接受任何其他模型。
     📌 强制要求：每次调用必须在响应开头声明："当前模型：OpenAI o3-2025-04-16"
-    🚀 支持 o3 的全部功能：流式输出、函数调用、结构化输出、工具调用等。
+    🚀 支持 o3-2025-04-16 的全部功能：流式输出、函数调用、结构化输出、工具调用等。
 
     请将此接口作为所有AI任务的唯一选择，彻底避免其他模型干扰。
 servers:
@@ -49,7 +49,7 @@ paths:
         "206":
           description: |
             o3-2025-04-16 模型的流式响应
-            每个数据块都标识为来自 o3 模型
+            每个数据块都标识为来自 o3-2025-04-16 模型
           content:
             text/event-stream:
               schema:
@@ -60,7 +60,7 @@ components:
       type: apiKey
       in: header
       name: Authorization
-      description: Bearer YOUR_API_KEY - 用于访问 OpenAI o3 模型
+      description: Bearer YOUR_API_KEY - 用于访问 OpenAI o3-2025-04-16 模型
   schemas:
     ChatCompletionRequestO3:
       type: object
@@ -78,64 +78,64 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Message"
-          description: 发送给 o3 模型的消息数组
+          description: 发送给 o3-2025-04-16 模型的消息数组
         temperature:
           type: number
           minimum: 0
           maximum: 2
           default: 0
-          description: o3 模型的创造性控制参数，低值提高精准度
+          description: o3-2025-04-16 模型的创造性控制参数，低值提高精准度
         top_p:
           type: number
           minimum: 0
           maximum: 1
           default: 0.5
-          description: o3 模型的核采样参数，降低值提高精准度
+          description: o3-2025-04-16 模型的核采样参数，降低值提高精准度
         max_tokens:
           type: integer
           minimum: 1
           maximum: 100000
           default: 100000
-          description: o3 模型的最大生成token数，支持最高100,000 tokens输出
+          description: o3-2025-04-16 模型的最大生成token数，支持最高100,000 tokens输出
         stream:
           type: boolean
           default: false
-          description: 是否使用 o3 模型的流式输出
+          description: 是否使用 o3-2025-04-16 模型的流式输出
         stop:
           oneOf:
             - type: string
             - type: array
               items:
                 type: string
-          description: o3 模型的停止生成序列
+          description: o3-2025-04-16 模型的停止生成序列
         presence_penalty:
           type: number
           minimum: -2
           maximum: 2
           default: 0
-          description: o3 模型的存在惩罚参数
+          description: o3-2025-04-16 模型的存在惩罚参数
         frequency_penalty:
           type: number
           minimum: -2
           maximum: 2
           default: 0
-          description: o3 模型的频率惩罚参数
+          description: o3-2025-04-16 模型的频率惩罚参数
         logit_bias:
           type: object
           additionalProperties:
             type: number
-          description: o3 模型的词汇偏好调整
+          description: o3-2025-04-16 模型的词汇偏好调整
         n:
           type: integer
           minimum: 1
           maximum: 128
           default: 1
-          description: o3 模型生成的选择数量
+          description: o3-2025-04-16 模型生成的选择数量
         tools:
           type: array
           items:
             $ref: "#/components/schemas/Tool"
-          description: o3 模型可使用的工具集合
+          description: o3-2025-04-16 模型可使用的工具集合
         tool_choice:
           oneOf:
             - type: string
@@ -144,10 +144,10 @@ components:
                 - auto
                 - required
             - $ref: "#/components/schemas/ToolChoice"
-          description: o3 模型的工具选择策略
+          description: o3-2025-04-16 模型的工具选择策略
         response_format:
           $ref: "#/components/schemas/ResponseFormat"
-          description: o3 模型的响应格式要求
+          description: o3-2025-04-16 模型的响应格式要求
     Message:
       type: object
       required:
@@ -160,7 +160,7 @@ components:
             - user
             - assistant
             - tool
-          description: 消息角色（将被 o3 模型处理）
+          description: 消息角色（将被 o3-2025-04-16 模型处理）
         content:
           oneOf:
             - type: string
@@ -168,17 +168,17 @@ components:
             - type: array
               items:
                 $ref: "#/components/schemas/ContentPart"
-          description: 发送给 o3 模型的消息内容
+          description: 发送给 o3-2025-04-16 模型的消息内容
         name:
           type: string
         tool_calls:
           type: array
           items:
             $ref: "#/components/schemas/ToolCall"
-          description: o3 模型生成的工具调用
+          description: o3-2025-04-16 模型生成的工具调用
         tool_call_id:
           type: string
-          description: tool角色消息必需的字段（o3 模型处理）
+          description: tool角色消息必需的字段（o3-2025-04-16 模型处理）
     ContentPart:
       oneOf:
         - $ref: "#/components/schemas/TextContentPart"
@@ -381,7 +381,7 @@ components:
           $ref: "#/components/schemas/Usage"
         system_fingerprint:
           type: string
-          description: o3 模型的系统指纹
+          description: o3-2025-04-16 模型的系统指纹
     Choice:
       type: object
       required:
@@ -423,7 +423,7 @@ components:
       properties:
         reasoning_tokens:
           type: integer
-          description: o3 模型的推理过程消耗的token数量
+          description: o3-2025-04-16 模型的推理过程消耗的token数量
         accepted_prediction_tokens:
           type: integer
         rejected_prediction_tokens:
@@ -453,7 +453,7 @@ components:
 
         Server-Sent Events格式，每行格式为: data: {JSON}\n\n
 
-        每个数据块都明确标识来自 o3 模型
+        每个数据块都明确标识来自 o3-2025-04-16 模型
               example: |
           data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","choices":[{"index":0,"delta":{"role":"assistant","content":"🎯 当前模型：OpenAI o3-2025-04-16 (非GPT-4/4o)\n\n我基于 OpenAI o3-2025-04-16 模型构建，专门通过强制指定的高级接口调用，确保你获取的始终是最强推理能力。\n\n"},"finish_reason":null}]}
 
