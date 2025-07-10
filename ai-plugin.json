@@ -3,7 +3,7 @@
   "name_for_human": "OpenAI o3-2025-04-16 强制模型验证器",
   "name_for_model": "o3_2025_04_16_enforcer",
   "description_for_human": "🔒 专门强制使用OpenAI o3-2025-04-16模型的验证器。确保100%使用o3-2025-04-16模型，提供最强推理能力，支持200K上下文窗口和100K输出token。每次响应都会添加中文时间戳和模型验证标识。",
-  "description_for_model": "Advanced OpenAI o3-2025-04-16 model enforcer and validator. CRITICAL: This plugin enforces exclusive use of the o3-2025-04-16 model with the following specifications: 200,000 context window, 100,000 max output tokens, reasoning token support, knowledge cutoff May 31 2024. Every response MUST begin with '当前模型：OpenAI o3-2025-04-16'. Features: forced temperature=0 and top_p=0.5 for deterministic output, Chinese datetime timestamps in format '2025年7月9日 17:40:24', comprehensive tool support (function/web_search/file_search/code_interpreter/mcp), multi-modal input support (text/image/audio/video/document), structured validation chain, session self-check mechanism, quality assurance with hallucination prevention, cache control with no-store policy, and Linear task integration with semantic triggers. All responses include timestamp field and validation status.",
+  "description_for_model": "Advanced OpenAI o3-2025-04-16 model enforcer and validator. CRITICAL: This plugin enforces exclusive use of the o3-2025-04-16 model with the following specifications: 200,000 context window, 100,000 max output tokens, reasoning token support, knowledge cutoff May 31 2024. Every response MUST begin with '当前模型：OpenAI o3-2025-04-16'. Features: forced temperature=0 and top_p=0.5 for deterministic output, US datetime timestamps in format '7/09/2025，时间20:17:15', comprehensive tool support (function/web_search/file_search/code_interpreter/mcp), multi-modal input support (text/image/audio/video/document), structured validation chain, session self-check mechanism, quality assurance with hallucination prevention, cache control with no-store policy, and Linear task integration with semantic triggers. All responses include timestamp field and validation status.",
   "auth": {
     "type": "user_http",
     "authorization_type": "bearer",
@@ -39,8 +39,8 @@
       "multimodal_support": true
     },
     "response_enhancements": {
-      "timestamp_format": "chinese_datetime",
-      "timestamp_example": "2025年7月9日 17:40:24",
+      "timestamp_format": "us_datetime",
+      "timestamp_example": "7/09/2025，时间20:17:15",
       "validation_status_included": true,
       "performance_metrics_included": true
     },
