@@ -4,10 +4,10 @@
 
 ## 🚀 **系统概述**
 
-**版本**: 6.1.1  
+**版本**: 6.1.2  
 **基于**: OpenAI o3-2025-04-16模型  
 **定价**: 完全基于OpenAI官方定价 ($1/1M输入, $4/1M输出)
-**新增**: 响应timestamp字段，ISO 8601格式时间戳
+**新增**: 响应timestamp字段，中文长日期格式时间戳
 
 ## 📊 **五级性能配置体系**
 
@@ -138,7 +138,7 @@
   "final_answer": "用户层：展示给终端用户的最终答案或代码",
   "validation_status": "验证层：会话自检验证通过标记和状态",
   "performance_metrics": "性能层：响应时间、推理时间、置信度评分等",
-  "timestamp": "时间戳：响应生成时间，ISO 8601格式（如：2025-01-11T14:45:00Z）"
+  "timestamp": "时间戳：响应生成时间，中文长日期格式（如：2025年7月9日 17:40:24）"
 }
 ```
 
@@ -362,7 +362,7 @@ curl -X POST https://api.openai.com/v1/chat/completions \
   "reasoning_quality": 0.92,            // 推理质量评分
   "auto_upgrade_triggered": false,      // 是否自动升级
   "budget_exceeded": false,             // 是否超出预算
-  "timestamp": "2025-01-11T14:45:00Z"   // 响应生成时间戳
+  "timestamp": "2025年7月9日 17:40:24"   // 响应生成时间戳
 }
 ```
 

@@ -174,7 +174,7 @@
         },
         {
           "name": "timestamp",
-          "description": "响应生成时间戳，ISO 8601格式（如：2025-01-11T14:45:00Z）",
+          "description": "响应生成时间戳，中文长日期格式（如：2025年7月9日 17:40:24）",
           "availability": "所有级别"
         }
       ],
@@ -259,9 +259,18 @@
     "rate_limits": "Follows OpenAI API limits",
     "privacy": "No data storage, real-time processing"
   },
-  "version": "6.1.1",
+  "version": "6.1.2",
   "last_updated": "2025-01-11",
   "changelog": {
+    "6.1.2": {
+      "date": "2025-01-11",
+      "changes": [
+        "更新timestamp字段格式：改为中文长日期格式（如：2025年7月9日 17:40:24）",
+        "优化时间显示：使用24小时制时间，更符合中文用户习惯",
+        "保持所有响应一致性：timestamp字段始终出现在每次响应中",
+        "更新所有相关文档：同步更新OpenAPI规范和插件配置"
+      ]
+    },
     "6.1.1": {
       "date": "2025-01-11",
       "changes": [
