@@ -43,18 +43,16 @@
 ## 🛠️ **工具支持**
 
 ### 🔧 **可用工具类型**
-- **function**: 自定义函数调用
-- **web_search**: 网络搜索
-- **file_search**: 文件搜索
-- **code_interpreter**: 代码解释器
-- **mcp**: MCP协议工具
+- **function**: 自定义函数调用 (完全支持)
+- **web_search**: 网络搜索 (需要特定API访问等级)
+- **file_search**: 文件搜索 (需要特定API访问等级)
+- **code_interpreter**: 代码解释器 (需要特定API访问等级)
+- **mcp**: MCP协议工具 (需要特定API访问等级)
 
 ### 🎯 **工具选择策略**
 - `none`: 不使用工具
 - `auto`: 自动智能选择 (默认)
-- `required`: 强制使用工具
-- `adaptive`: 自适应选择 (根据上下文)
-- `priority`: 优先级策略 (重要工具优先)
+- `required`: 强制使用工具 (受API访问等级限制)
 
 ---
 
@@ -62,10 +60,10 @@
 
 ### 📁 **支持的文件格式**
 ```yaml
-图像: JPEG, PNG, GIF, WebP, BMP, TIFF
-音频: MP3, WAV, OGG, M4A, FLAC
-视频: MP4, WebM, AVI, MOV, MKV
-文档: PDF, DOCX, TXT, MD, CSV, XLSX
+图像: JPEG, PNG, GIF, WebP, BMP, TIFF (完全支持)
+音频: 不支持 (受API限制)
+视频: 不支持 (受API限制)
+文档: PDF, DOCX, TXT, MD, CSV, XLSX (完全支持)
 ```
 
 ### 🖼️ **图像处理**

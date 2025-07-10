@@ -193,14 +193,14 @@ components:
         n:
           type: integer
           minimum: 1
-          maximum: 128
+          maximum: 10
           default: 1
-          description: o3-2025-04-16 模型生成的选择数量
+          description: o3-2025-04-16 模型生成的选择数量，受API等级和速率限制约束
         tools:
           type: array
           items:
             $ref: "#/components/schemas/Tool"
-          description: o3-2025-04-16 模型可使用的工具集合
+          description: o3-2025-04-16 模型可使用的工具集合，需要特定API访问等级
         tool_choice:
           oneOf:
             - type: string
@@ -208,27 +208,11 @@ components:
                 - none
                 - auto
                 - required
-                - adaptive
-                - priority
             - $ref: "#/components/schemas/ToolChoice"
-          description: o3-2025-04-16 模型的高级工具选择策略（adaptive=自适应选择，priority=优先级策略）
-        tool_config:
-          $ref: "#/components/schemas/ToolConfig"
-          description: o3-2025-04-16 模型的高级工具配置选项
+          description: o3-2025-04-16 模型的工具选择策略，受API访问等级限制
         response_format:
           $ref: "#/components/schemas/ResponseFormat"
           description: o3-2025-04-16 模型的响应格式要求
-        quality_settings:
-          $ref: "#/components/schemas/QualitySettings"
-          description: o3-2025-04-16 模型的质量控制设置
-        logging_enabled:
-          type: boolean
-          default: true
-          description: 是否启用完整日志记录
-        performance_monitoring:
-          type: boolean
-          default: true
-          description: 是否启用性能监控
 
 
     Message:
@@ -266,8 +250,6 @@ components:
       oneOf:
         - $ref: "#/components/schemas/TextContentPart"
         - $ref: "#/components/schemas/ImageContentPart"
-        - $ref: "#/components/schemas/AudioContentPart"
-        - $ref: "#/components/schemas/VideoContentPart"
         - $ref: "#/components/schemas/DocumentContentPart"
     TextContentPart:
       type: object
@@ -331,80 +313,7 @@ components:
             alt_text:
               type: string
               description: 图像替代文本描述
-    AudioContentPart:
-      type: object
-      required:
-        - type
-        - audio_url
-      properties:
-        type:
-          type: string
-          enum:
-            - audio_url
-        audio_url:
-          type: object
-          required:
-            - url
-          properties:
-            url:
-              type: string
-              description: 音频URL或base64数据URI
-            format:
-              type: string
-              enum:
-                - mp3
-                - wav
-                - ogg
-                - m4a
-                - flac
-              description: 音频格式类型
-            duration:
-              type: number
-              description: 音频时长（秒）
-            transcript:
-              type: string
-              description: 音频转录文本
-    VideoContentPart:
-      type: object
-      required:
-        - type
-        - video_url
-      properties:
-        type:
-          type: string
-          enum:
-            - video_url
-        video_url:
-          type: object
-          required:
-            - url
-          properties:
-            url:
-              type: string
-              description: 视频URL或base64数据URI
-            format:
-              type: string
-              enum:
-                - mp4
-                - webm
-                - avi
-                - mov
-                - mkv
-              description: 视频格式类型
-            duration:
-              type: number
-              description: 视频时长（秒）
-            resolution:
-              type: string
-              enum:
-                - 480p
-                - 720p
-                - 1080p
-                - 4k
-              description: 视频分辨率
-            thumbnail:
-              type: string
-              description: 视频缩略图URL
+
     DocumentContentPart:
       type: object
       required:
@@ -529,10 +438,6 @@ components:
           type: string
           enum:
             - function
-            - web_search
-            - file_search
-            - code_interpreter
-            - mcp
         function:
           $ref: "#/components/schemas/FunctionCall"
     FunctionCall:
@@ -762,18 +667,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ToolCall"
-        performance_metrics:
-          $ref: "#/components/schemas/PerformanceMetrics"
-    PerformanceMetrics:
-      type: object
-      description: o3-2025-04-16 模型基础性能指标
-      properties:
-        response_time_ms:
-          type: integer
-          description: 响应时间（毫秒）
-        tokens_per_second:
-          type: number
-          description: token生成速率
+
     ErrorResponse:
       type: object
       required:
@@ -800,144 +694,5 @@ components:
           type: string
           format: date-time
           description: 错误发生时间
-        log_info:
-          $ref: "#/components/schemas/LogInfo"
-    LogInfo:
-      type: object
-      description: 完整日志记录信息
-      properties:
-        request_id:
-          type: string
-          description: 请求唯一标识符
-        user_id:
-          type: string
-          description: 用户标识符
-        model_version:
-          type: string
-          enum:
-            - o3-2025-04-16
-          description: 使用的模型版本
-        request_timestamp:
-          type: string
-          format: date-time
-          description: 请求开始时间
-        response_timestamp:
-          type: string
-          format: date-time
-          description: 响应完成时间
-        input_tokens:
-          type: integer
-          description: 输入token数量
-        output_tokens:
-          type: integer
-          description: 输出token数量
-        reasoning_tokens:
-          type: integer
-          description: 推理过程token数量
-        endpoint:
-          type: string
-          description: 调用的API端点
-        status_code:
-          type: integer
-          description: HTTP状态码
-        error_details:
-          type: string
-          description: 错误详情（如有）
-        performance_metrics:
-          $ref: "#/components/schemas/PerformanceMetrics"
-        quality_assurance:
-          $ref: "#/components/schemas/QualityAssurance"
-    QualityAssurance:
-      type: object
-      description: 防幻觉质量保证机制
-      properties:
-        fact_verification:
-          type: boolean
-          description: 是否通过事实验证
-        source_reliability:
-          type: string
-          enum:
-            - verified
-            - partially_verified
-            - unverified
-          description: 信息源可靠性等级
-        consistency_check:
-          type: boolean
-          description: 内容一致性检查通过状态
-        reproducibility_score:
-          type: number
-          minimum: 0
-          maximum: 1
-          description: 可复现性评分
-        confidence_threshold_met:
-          type: boolean
-          description: 是否达到置信度阈值
-        hallucination_indicators:
-          type: array
-          items:
-            type: string
-          description: 发现的潜在幻觉指标
-    NDJsonStreamResponse:
-      type: string
-      description: |
-        NDJSON格式的流式响应，每行一个JSON对象
-        支持结构化数据流传输
-      example: |
-        {"type":"reasoning","content":"开始推理过程..."}
-        {"type":"analysis","content":"分析问题结构..."}
-        {"type":"strategy","content":"制定解决策略..."}
-        {"type":"final","content":"最终答案"}
-    PlainTextStreamResponse:
-      type: string
-      description: |
-        纯文本格式的流式响应
-        适用于简单文本输出场景
-      example: |
-        推理：开始分析问题...
-        分析：识别关键要素...
-        策略：制定执行方案...
-        答案：这是最终结果
-    QualitySettings:
-      type: object
-      description: o3-2025-04-16 模型质量控制与防幻觉设置
-      properties:
-        hallucination_detection:
-          type: boolean
-          default: true
-          description: 启用幻觉检测机制
-        fact_verification:
-          type: boolean
-          default: true
-          description: 启用事实验证检查
-        confidence_threshold:
-          type: number
-          minimum: 0
-          maximum: 1
-          default: 0.8
-          description: 最低置信度阈值，低于此值将触发警告
-        source_verification:
-          type: boolean
-          default: true
-          description: 启用信息源验证
-        consistency_check:
-          type: boolean
-          default: true
-          description: 启用内容一致性检查
-        reproducibility_requirement:
-          type: boolean
-          default: true
-          description: 要求输出具备可复现性
-        error_correction:
-          type: boolean
-          default: true
-          description: 启用自动错误纠正
-        quality_assurance_level:
-          type: string
-          enum:
-            - basic
-            - standard
-            - strict
-            - maximum
-          default: standard
-          description: 质量保证等级设置
+
 

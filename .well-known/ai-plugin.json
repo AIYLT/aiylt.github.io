@@ -47,22 +47,20 @@
     },
     "tool_support": {
       "function_calling": true,
-      "web_search": true,
-      "file_search": true,
-      "code_interpreter": true,
-      "mcp": true,
-      "tool_choice_strategies": ["none", "auto", "required", "adaptive", "priority"]
+      "web_search": "需要特定API访问等级",
+      "file_search": "需要特定API访问等级", 
+      "code_interpreter": "需要特定API访问等级",
+      "mcp": "需要特定API访问等级",
+      "tool_choice_strategies": ["none", "auto", "required"]
     },
           "input_modalities": {
         "text": true,
         "image": true,
-        "audio": true,
-        "video": true,
+        "audio": false,
+        "video": false,
         "document": true,
         "supported_formats": {
           "image": ["jpeg", "png", "gif", "webp", "bmp", "tiff"],
-          "audio": ["mp3", "wav", "ogg", "m4a", "flac"],
-          "video": ["mp4", "webm", "avi", "mov", "mkv"],
           "document": ["pdf", "docx", "txt", "md", "csv", "xlsx"]
         }
       },
