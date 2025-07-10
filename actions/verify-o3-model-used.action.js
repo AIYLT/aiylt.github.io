@@ -264,8 +264,16 @@ class O3ModelValidator {
      * 验证 API 响应
      */
     async validateResponse(responseData, statusCode) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const day = now.getDate();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        
         const validation = {
-            timestamp: new Date().toISOString(),
+            timestamp: `${year}年${month}月${day}日 ${hours}:${minutes}:${seconds}`,
             model: responseData.model,
             status: statusCode,
             usage: responseData.usage,
