@@ -1,0 +1,300 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "O3 Stock Analysis System - Multi-Level Edition",
+  "name_for_model": "o3_stock_analysis_multilevel",
+  "description_for_human": "🎯 O3股票分析系统 - 5级配置版。基于OpenAI o3-2025-04-16模型，提供Lightning($0.03)到Ultimate($0.65)五个性能级别。智能分级推荐，成本透明控制，支持从快速验证到深度研究的全场景分析。",
+  "description_for_model": "Advanced stock analysis system powered by OpenAI o3-2025-04-16 model with 5 performance tiers: Lightning($0.03/call, 14k tokens, 3 tools), Turbo($0.10/call, 40k tokens, 6 tools), Pro($0.22/call, 82k tokens, 10 tools), Elite($0.41/call, 140k tokens, 13 tools), Ultimate($0.65/call, 200k tokens, 15 tools). Features intelligent level auto-detection, multi-validation chain (unit_test→integration_test→manual_inspection), session self-check mechanism, hallucination prevention, quality assurance system, cache control (no-store), multi-modal input support, structured 7-layer responses (reasoning/analysis/strategy/risk_control/final_answer/validation_status/performance_metrics), advanced tool configuration (adaptive/priority strategies), real-time news integration, technical analysis, sentiment analysis, quantitative modeling, and transparent cost calculation based on official OpenAI pricing ($1/1M input, $4/1M output tokens).",
+  "auth": {
+    "type": "user_http",
+    "authorization_type": "bearer",
+    "verification_tokens": {
+      "openai": "pk-proj-o3stock-2025-v6"
+    }
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://aiylt.github.io/.well-known/openapi.yaml",
+    "is_user_authenticated": true
+  },
+  "logo_url": "https://aiylt.github.io/.well-known/logo.png",
+  "contact_email": "support@aiylt.github.io",
+  "legal_info_url": "https://aiylt.github.io/.well-known/legal.html",
+  "httpx_requests_read_timeout": 60,
+  "httpx_requests_connect_timeout": 20,
+  "capabilities": {
+    "models": {
+      "supported": ["o3-2025-04-16"],
+      "default": "o3-2025-04-16",
+      "locked": true,
+      "description": "锁定使用o3-2025-04-16模型确保一致性和最佳性能"
+    },
+    "performance_tiers": {
+      "lightning": {
+        "cost_per_call": 0.03,
+        "tokens": {
+          "input": 10000,
+          "output": 4000,
+          "reasoning": 2000,
+          "total": 14000
+        },
+        "tools": 3,
+        "duration": "3-8s",
+        "use_cases": ["快速验证", "简单查询", "实时监控"],
+        "monthly_cost_50_calls": 1.50
+      },
+      "turbo": {
+        "cost_per_call": 0.10,
+        "tokens": {
+          "input": 20000,
+          "output": 15000,
+          "reasoning": 5000,
+          "total": 40000
+        },
+        "tools": 6,
+        "duration": "8-15s",
+        "use_cases": ["标准分析", "日常交易", "技术分析"],
+        "monthly_cost_50_calls": 5.00
+      },
+      "pro": {
+        "cost_per_call": 0.22,
+        "tokens": {
+          "input": 35000,
+          "output": 35000,
+          "reasoning": 12000,
+          "total": 82000
+        },
+        "tools": 10,
+        "duration": "15-25s",
+        "use_cases": ["深度分析", "策略制定", "组合管理"],
+        "monthly_cost_50_calls": 11.00
+      },
+      "elite": {
+        "cost_per_call": 0.41,
+        "tokens": {
+          "input": 50000,
+          "output": 65000,
+          "reasoning": 25000,
+          "total": 140000
+        },
+        "tools": 13,
+        "duration": "25-40s",
+        "use_cases": ["机构级分析", "重大决策", "风险建模"],
+        "monthly_cost_50_calls": 20.50
+      },
+      "ultimate": {
+        "cost_per_call": 0.65,
+        "tokens": {
+          "input": 50000,
+          "output": 100000,
+          "reasoning": 50000,
+          "total": 200000
+        },
+        "tools": 15,
+        "duration": "40-60s",
+        "use_cases": ["极限分析", "研究报告", "AI探索"],
+        "monthly_cost_50_calls": 32.50
+      }
+    },
+    "analysis_features": {
+      "technical_analysis": {
+        "indicators": ["RSI", "MACD", "Bollinger Bands", "EMA", "SMA", "ADX", "STOCH", "VOLUME", "FIBONACCI", "ICHIMOKU"],
+        "timeframes": ["1m", "5m", "15m", "30m", "1h", "4h", "1d", "1w", "1M"],
+        "pattern_recognition": true,
+        "support_resistance": true
+      },
+      "fundamental_analysis": {
+        "financial_metrics": true,
+        "earnings_analysis": true,
+        "valuation_models": true,
+        "sector_comparison": true
+      },
+      "sentiment_analysis": {
+        "news_sentiment": true,
+        "social_media": true,
+        "analyst_reports": true,
+        "ai_powered": true,
+        "multi_language": ["zh", "en", "ja", "ko"]
+      },
+      "risk_management": {
+        "var_calculation": true,
+        "stress_testing": true,
+        "portfolio_optimization": true,
+        "stop_loss_recommendations": true
+      },
+      "quantitative_modeling": {
+        "ml_models": ["LSTM", "Transformer", "XGBoost", "Random Forest", "ARIMA"],
+        "prediction_horizons": ["1d", "3d", "1w", "2w", "1M"],
+        "monte_carlo": true,
+        "backtesting": true
+      }
+    },
+    "input_modalities": {
+      "text": true,
+      "image": true,
+      "chart_recognition": true,
+      "multi_modal": true,
+      "real_time_data": true
+    },
+    "output_structure": {
+      "layers": [
+        {
+          "name": "reasoning",
+          "description": "o3-2025-04-16深度推理过程摘要，仅后台审计用",
+          "availability": "高级别显示"
+        },
+        {
+          "name": "analysis", 
+          "description": "深度分析阶段，包含问题分解与解决路径",
+          "availability": "所有级别"
+        },
+        {
+          "name": "strategy",
+          "description": "策略制定阶段，明确执行方案与步骤",
+          "availability": "所有级别"
+        },
+        {
+          "name": "risk_control",
+          "description": "风险控制阶段，识别并规避潜在问题",
+          "availability": "所有级别"
+        },
+        {
+          "name": "final_answer",
+          "description": "展示给终端用户的最终答案或代码",
+          "availability": "所有级别"
+        },
+        {
+          "name": "validation_status",
+          "description": "会话自检验证通过标记和状态",
+          "availability": "所有级别"
+        },
+        {
+          "name": "performance_metrics",
+          "description": "响应时间、推理时间、置信度评分等性能指标",
+          "availability": "所有级别"
+        },
+        {
+          "name": "timestamp",
+          "description": "响应生成时间戳，ISO 8601格式（如：2025-01-11T14:45:00Z）",
+          "availability": "所有级别"
+        }
+      ],
+      "cost_transparency": true,
+      "confidence_scores": true,
+      "metadata_rich": true,
+      "validation_marks": true,
+      "performance_tracking": true
+    },
+    "intelligent_features": {
+      "auto_level_detection": true,
+      "smart_upgrade_suggestion": true,
+      "budget_control": true,
+      "parallel_tool_execution": true,
+      "real_time_streaming": true,
+      "adaptive_configuration": true,
+      "multi_validation_chain": true,
+      "session_self_check": true,
+      "hallucination_prevention": true,
+      "quality_assurance": true,
+      "cache_control": true
+    },
+    "validation_chain": {
+      "unit_test": {
+        "enabled": true,
+        "status_tracking": true,
+        "execution_time_monitoring": true
+      },
+      "integration_test": {
+        "enabled": true,
+        "dependency_checking": true,
+        "coverage_percentage": true
+      },
+      "manual_inspection": {
+        "enabled": true,
+        "inspector_tracking": true,
+        "timestamp_recording": true,
+        "notes_support": true
+      },
+      "overall_status": ["pending", "passed", "failed", "partial"]
+    },
+    "session_validation": {
+      "consistency_check": true,
+      "style_validation": true,
+      "parameter_validation": true,
+      "performance_baseline_check": true,
+      "pre_conversation_validation": true,
+      "timeout_control": "100-5000ms",
+      "auto_correction": true
+    },
+    "quality_assurance": {
+      "hallucination_detection": true,
+      "fact_verification": true,
+      "confidence_threshold": 0.8,
+      "source_verification": true,
+      "consistency_check": true,
+      "reproducibility_requirement": true,
+      "error_correction": true,
+      "quality_levels": ["basic", "standard", "strict", "maximum"]
+    },
+    "cache_control": {
+      "headers": "Cache-Control: no-store, max-age=0",
+      "applies_to": ["200", "206", "400", "401", "429", "500"],
+      "real_time_guarantee": true,
+      "stock_data_freshness": true
+    }
+  },
+  "pricing": {
+    "model": "pay_per_use",
+    "based_on": "OpenAI官方定价",
+    "input_tokens": "$1.00 per 1M tokens",
+    "output_tokens": "$4.00 per 1M tokens", 
+    "reasoning_tokens": "$4.00 per 1M tokens",
+    "transparent_calculation": true,
+    "budget_controls": true,
+    "cost_range": "$0.03 - $0.65 per analysis"
+  },
+  "compliance": {
+    "openai_compatible": true,
+    "api_version": "v1",
+    "authentication": "Bearer token required",
+    "rate_limits": "Follows OpenAI API limits",
+    "privacy": "No data storage, real-time processing"
+  },
+  "version": "6.1.1",
+  "last_updated": "2025-01-11",
+  "changelog": {
+    "6.1.1": {
+      "date": "2025-01-11",
+      "changes": [
+        "新增timestamp字段：所有API响应现在包含ISO 8601格式的时间戳",
+        "增强响应可追溯性：每次响应都附带精确的生成时间",
+        "更新流式响应格式：流式输出的每个数据块都包含时间戳",
+        "保持完整向后兼容性：新字段为可选，不影响现有客户端",
+        "优化响应结构：timestamp字段与model字段同级放置"
+      ]
+    },
+    "6.1.0": {
+      "date": "2025-01-27",
+      "changes": [
+        "新增多重验证链机制 (单元测试→集成测试→人工巡检)",
+        "实现会话自检机制 (对话开始前验证+实时一致性检查)",
+        "完善防幻觉质量保证体系 (事实验证+置信度阈值+源可靠性)",
+        "强制缓存禁用 (Cache-Control: no-store, max-age=0)",
+        "扩展为七层响应结构 (新增validation_status+performance_metrics)",
+        "增强工具配置 (自适应选择+优先级策略+并行执行)",
+        "完整的性能监控和错误处理机制",
+        "提升API安全性和输出质量保证"
+      ]
+    },
+    "6.0.0": {
+      "date": "2025-01-27",
+      "changes": [
+        "引入五级性能配置系统 (Lightning/Turbo/Pro/Elite/Ultimate)",
+        "基于OpenAI官方定价的精确成本计算",
+        "智能级别自动检测和升级建议",
+        "完整的五层响应结构化输出",
+        "增强的预算控制和成本透明度",
+        "标准OpenAI Chat Completions API兼容性"
+      ]
+    }
+  }
+}
