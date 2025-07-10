@@ -1,0 +1,127 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "OpenAI o3-2025-04-16 强制模型验证器",
+  "name_for_model": "o3_2025_04_16_enforcer",
+  "description_for_human": "🔒 专门强制使用OpenAI o3-2025-04-16模型的验证器。确保100%使用o3-2025-04-16模型，提供最强推理能力，支持200K上下文窗口和100K输出token。每次响应都会添加中文时间戳和模型验证标识。",
+  "description_for_model": "Advanced OpenAI o3-2025-04-16 model enforcer and validator. CRITICAL: This plugin enforces exclusive use of the o3-2025-04-16 model with the following specifications: 200,000 context window, 100,000 max output tokens, reasoning token support, knowledge cutoff May 31 2024. Every response MUST begin with '当前模型：OpenAI o3-2025-04-16'. Features: forced temperature=0 and top_p=0.5 for deterministic output, Chinese datetime timestamps in format '2025年7月9日 17:40:24', comprehensive tool support (function/web_search/file_search/code_interpreter/mcp), multi-modal input support (text/image/audio/video/document), structured validation chain, session self-check mechanism, quality assurance with hallucination prevention, cache control with no-store policy, and Linear task integration with semantic triggers. All responses include timestamp field and validation status.",
+  "auth": {
+    "type": "user_http",
+    "authorization_type": "bearer",
+    "verification_tokens": {
+      "openai": "o3-2025-04-16-enforcer"
+    }
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://aiylt.github.io/.well-known/openapi.yaml",
+    "is_user_authenticated": true
+  },
+  "logo_url": "https://aiylt.github.io/.well-known/logo.png",
+  "contact_email": "support@aiylt.github.io",
+  "legal_info_url": "https://aiylt.github.io/.well-known/legal.html",
+  "httpx_requests_read_timeout": 60,
+  "httpx_requests_connect_timeout": 20,
+  "capabilities": {
+    "model_enforcement": {
+      "locked_model": "o3-2025-04-16",
+      "forced_parameters": {
+        "temperature": 0,
+        "top_p": 0.5
+      },
+      "required_response_prefix": "当前模型：OpenAI o3-2025-04-16",
+      "validation_enabled": true
+    },
+    "model_specifications": {
+      "context_window": 200000,
+      "max_output_tokens": 100000,
+      "reasoning_tokens": true,
+      "knowledge_cutoff": "2024-05-31",
+      "multimodal_support": true
+    },
+    "response_enhancements": {
+      "timestamp_format": "chinese_datetime",
+      "timestamp_example": "2025年7月9日 17:40:24",
+      "validation_status_included": true,
+      "performance_metrics_included": true
+    },
+    "tool_support": {
+      "function_calling": true,
+      "web_search": true,
+      "file_search": true,
+      "code_interpreter": true,
+      "mcp": true,
+      "tool_choice_strategies": ["none", "auto", "required", "adaptive", "priority"]
+    },
+    "input_modalities": {
+      "text": true,
+      "image": true,
+      "audio": true,
+      "video": true,
+      "document": true,
+      "supported_formats": {
+        "image": ["jpeg", "png", "gif", "webp", "bmp", "tiff"],
+        "audio": ["mp3", "wav", "ogg", "m4a", "flac"],
+        "video": ["mp4", "webm", "avi", "mov", "mkv"],
+        "document": ["pdf", "docx", "txt", "md", "csv", "xlsx"]
+      }
+    },
+    "quality_assurance": {
+      "hallucination_detection": true,
+      "fact_verification": true,
+      "confidence_threshold": 0.8,
+      "source_verification": true,
+      "consistency_check": true,
+      "reproducibility_requirement": true,
+      "error_correction": true,
+      "quality_levels": ["basic", "standard", "strict", "maximum"]
+    },
+    "validation_chain": {
+      "unit_test": true,
+      "integration_test": true,
+      "manual_inspection": true,
+      "overall_validation_tracking": true
+    },
+    "session_validation": {
+      "consistency_check": true,
+      "style_validation": true,
+      "parameter_validation": true,
+      "performance_baseline_check": true,
+      "pre_conversation_validation": true,
+      "auto_correction": true
+    },
+    "cache_control": {
+      "policy": "no-store, max-age=0",
+      "applies_to_all_responses": true,
+      "real_time_guarantee": true
+    },
+    "linear_integration": {
+      "semantic_triggers": [
+        "把这段话写成任务",
+        "放到那裡面去", 
+        "我们那天说的内容写进Linear",
+        "这件事你记得写进去",
+        "幫我記一下",
+        "幫我登記一下",
+        "寫下來"
+      ],
+      "fuzzy_match_patterns": ["记一下", "记录", "登记", "写下", "任务", "放进去", "写进", "放到", "记得", "帮我"],
+      "auto_execution": true,
+      "api_endpoint": "https://api.linear.app/graphql"
+    }
+  },
+  "security": {
+    "model_tampering_prevention": true,
+    "parameter_enforcement": true,
+    "response_validation": true,
+    "anti_bypass_protection": true
+  },
+  "compliance": {
+    "openai_api_compatible": true,
+    "api_version": "v1",
+    "rate_limits": "follows_openai_limits",
+    "privacy": "no_data_storage"
+  },
+  "version": "6.1.2",
+  "last_updated": "2025-01-11",
+  "build_timestamp": "2025-01-11T18:00:00Z"
+} 
