@@ -59,40 +59,9 @@
       "audio": true,
       "video": true,
       "document": true,
-      "supported_formats": {
-        "image": ["jpeg", "png", "gif", "webp", "bmp", "tiff"],
-        "audio": ["mp3", "wav", "ogg", "m4a", "flac"],
-        "video": ["mp4", "webm", "avi", "mov", "mkv"],
-        "document": ["pdf", "docx", "txt", "md", "csv", "xlsx"]
-      }
+      
     },
-    "quality_assurance": {
-      "hallucination_detection": true,
-      "fact_verification": true,
-      "confidence_threshold": 0.8,
-      "source_verification": true,
-      "consistency_check": true,
-      "reproducibility_requirement": true,
-      "error_correction": true,
-      "quality_levels": ["basic", "standard", "strict", "maximum"]
-    },
-    "validation_chain": {
-      "unit_test": true,
-      "integration_test": true,
-      "manual_inspection": false,
-      "overall_validation_tracking": true,
-      "fail_fast": false,
-      "degraded_mode_enabled": true,
-      "validation_timeout_ms": 5000
-    },
-    "session_validation": {
-      "consistency_check": true,
-      "style_validation": true,
-      "parameter_validation": true,
-      "performance_baseline_check": true,
-      "pre_conversation_validation": true,
-      "auto_correction": true
-    },
+
     "cache_control": {
       "policy": "no-store, max-age=0",
       "applies_to_all_responses": true,
@@ -100,20 +69,7 @@
       "image_processing_exception": true,
       "temp_cache_for_multimodal": 300
     },
-    "linear_integration": {
-      "semantic_triggers": [
-        "把这段话写成任务",
-        "放到那裡面去", 
-        "我们那天说的内容写进Linear",
-        "这件事你记得写进去",
-        "幫我記一下",
-        "幫我登記一下",
-        "寫下來"
-      ],
-      "fuzzy_match_patterns": ["记一下", "记录", "登记", "写下", "任务", "放进去", "写进", "放到", "记得", "帮我"],
-      "auto_execution": true,
-      "api_endpoint": "https://api.linear.app/graphql"
-    }
+
   },
   "security": {
     "model_tampering_prevention": true,

@@ -229,12 +229,8 @@ components:
           type: boolean
           default: true
           description: 是否启用性能监控
-        session_validation:
-          $ref: "#/components/schemas/SessionValidation"
-          description: o3-2025-04-16 模型会话自检配置
-        validation_chain:
-          $ref: "#/components/schemas/ValidationChain"
-          description: o3-2025-04-16 模型多重验证链配置
+
+
     Message:
       type: object
       required:
@@ -312,24 +308,6 @@ components:
                 - high
               default: auto
               description: 图像处理精度级别
-            format:
-              type: string
-              enum:
-                - jpeg
-                - png
-                - gif
-                - webp
-                - bmp
-                - tiff
-              description: 图像格式类型
-            dimensions:
-              type: object
-              properties:
-                width:
-                  type: integer
-                height:
-                  type: integer
-              description: 图像尺寸信息
             alt_text:
               type: string
               description: 图像替代文本描述
@@ -351,18 +329,6 @@ components:
             url:
               type: string
               description: 音频URL或base64数据URI
-            format:
-              type: string
-              enum:
-                - mp3
-                - wav
-                - ogg
-                - m4a
-                - flac
-              description: 音频格式类型
-            duration:
-              type: number
-              description: 音频时长（秒）
             transcript:
               type: string
               description: 音频转录文本
@@ -384,26 +350,6 @@ components:
             url:
               type: string
               description: 视频URL或base64数据URI
-            format:
-              type: string
-              enum:
-                - mp4
-                - webm
-                - avi
-                - mov
-                - mkv
-              description: 视频格式类型
-            duration:
-              type: number
-              description: 视频时长（秒）
-            resolution:
-              type: string
-              enum:
-                - 480p
-                - 720p
-                - 1080p
-                - 4k
-              description: 视频分辨率
             thumbnail:
               type: string
               description: 视频缩略图URL
@@ -425,19 +371,6 @@ components:
             url:
               type: string
               description: 文档URL或base64数据URI
-            format:
-              type: string
-              enum:
-                - pdf
-                - docx
-                - txt
-                - md
-                - csv
-                - xlsx
-              description: 文档格式类型
-            pages:
-              type: integer
-              description: 文档页数
             extract_text:
               type: boolean
               default: true
@@ -758,66 +691,24 @@ components:
           enum:
             - assistant
         content:
-          type: object
-          required:
-            - reasoning
-            - analysis
-            - strategy
-            - risk_control
-            - final_answer
-          properties:
-            reasoning:
-              type: string
-              description: "o3-2025-04-16 推理过程摘要，仅后台审计用，不向终端用户展示"
-            analysis:
-              type: string
-              description: "深度分析阶段，包含问题分解与解决路径"
-            strategy:
-              type: string
-              description: "策略制定阶段，明确执行方案与步骤"
-            risk_control:
-              type: string
-              description: "风险控制阶段，识别并规避潜在问题"
-            final_answer:
-              type: string
-              description: "展示给终端用户的最终答案或代码"
+          type: string
+          description: "o3-2025-04-16 模型生成的响应内容"
         tool_calls:
           type: array
           items:
             $ref: "#/components/schemas/ToolCall"
         performance_metrics:
           $ref: "#/components/schemas/PerformanceMetrics"
-        validation_status:
-          $ref: "#/components/schemas/ValidationStatus"
-          description: 会话自检验证通过标记和状态
     PerformanceMetrics:
       type: object
-      description: o3-2025-04-16 模型性能监控指标
+      description: o3-2025-04-16 模型基础性能指标
       properties:
         response_time_ms:
           type: integer
           description: 响应时间（毫秒）
-        reasoning_time_ms:
-          type: integer
-          description: 推理时间（毫秒）
         tokens_per_second:
           type: number
           description: token生成速率
-        memory_usage_mb:
-          type: number
-          description: 内存使用量（MB）
-        confidence_score:
-          type: number
-          minimum: 0
-          maximum: 1
-          description: 响应置信度评分
-        hallucination_risk:
-          type: string
-          enum:
-            - low
-            - medium
-            - high
-          description: 幻觉风险评估等级
     ErrorResponse:
       type: object
       required:
@@ -826,28 +717,14 @@ components:
         error:
           type: object
           required:
-            - type
             - message
-            - code
           properties:
-            type:
-              type: string
-              enum:
-                - invalid_request_error
-                - api_error
-                - permission_error
-                - rate_limit_error
-                - quota_exceeded_error
-                - authentication_error
             message:
               type: string
-              description: 详细错误描述
-            code:
+              description: 错误描述
+            type:
               type: string
-              description: 具体错误代码
-            param:
-              type: string
-              description: 导致错误的参数名称
+              description: 错误类型
             retry_after:
               type: integer
               description: 建议重试等待时间（秒）
@@ -998,210 +875,4 @@ components:
             - maximum
           default: standard
           description: 质量保证等级设置
-    ValidationChain:
-      type: object
-      description: o3-2025-04-16 模型多重验证链配置
-      properties:
-        unit_test:
-          type: object
-          description: 单元测试验证阶段
-          properties:
-            enabled:
-              type: boolean
-              default: true
-              description: 是否启用单元测试验证
-            status:
-              type: string
-              enum:
-                - pending
-                - passed
-                - failed
-              description: 单元测试执行状态
-            test_cases:
-              type: array
-              items:
-                type: string
-              description: 执行的测试用例列表
-            execution_time_ms:
-              type: integer
-              description: 测试执行时间（毫秒）
-        integration_test:
-          type: object
-          description: 集成测试验证阶段
-          properties:
-            enabled:
-              type: boolean
-              default: true
-              description: 是否启用集成测试验证
-            status:
-              type: string
-              enum:
-                - pending
-                - passed
-                - failed
-              description: 集成测试执行状态
-            dependencies:
-              type: array
-              items:
-                type: string
-              description: 依赖的服务和组件列表
-            coverage_percentage:
-              type: number
-              minimum: 0
-              maximum: 100
-              description: 测试覆盖率百分比
-        manual_inspection:
-          type: object
-          description: 人工巡检验证阶段
-          properties:
-            enabled:
-              type: boolean
-              default: true
-              description: 是否启用人工巡检
-            inspector_id:
-              type: string
-              description: 巡检员标识符
-            status:
-              type: string
-              enum:
-                - pending
-                - approved
-                - rejected
-              description: 人工巡检状态
-            inspection_timestamp:
-              type: string
-              format: date-time
-              description: 巡检完成时间
-            notes:
-              type: string
-              description: 巡检备注和意见
-        overall_validation_status:
-          type: string
-          enum:
-            - pending
-            - passed
-            - failed
-            - partial
-          description: 整体验证链状态
-        validation_completion_time:
-          type: string
-          format: date-time
-          description: 验证链完成时间
-    SessionValidation:
-      type: object
-      description: o3-2025-04-16 模型会话自检机制配置
-      properties:
-        enable_consistency_check:
-          type: boolean
-          default: true
-          description: 是否启用对话一致性检查
-        style_validation:
-          type: boolean
-          default: true
-          description: 是否验证回复风格一致性
-        parameter_validation:
-          type: boolean
-          default: true
-          description: 是否验证参数完整性
-        performance_baseline_check:
-          type: boolean
-          default: true
-          description: 是否检查性能基线对比
-        pre_conversation_validation:
-          type: boolean
-          default: true
-          description: 是否在对话开始前执行验证
-        validation_timeout_ms:
-          type: integer
-          minimum: 100
-          maximum: 5000
-          default: 1000
-          description: 验证超时时间（毫秒）
-        auto_correction:
-          type: boolean
-          default: false
-          description: 是否启用自动纠正机制
-    ValidationStatus:
-      type: object
-      description: o3-2025-04-16 模型会话验证状态和通过标记
-      properties:
-        validation_passed:
-          type: boolean
-          description: 整体验证是否通过
-        consistency_verified:
-          type: boolean
-          description: 对话一致性验证通过状态
-        style_drift_detected:
-          type: boolean
-          description: 是否检测到风格漂移
-        parameter_integrity:
-          type: boolean
-          description: 参数完整性验证通过状态
-        performance_baseline_met:
-          type: boolean
-          description: 是否达到性能基线标准
-        validation_timestamp:
-          type: string
-          format: date-time
-          description: 验证执行时间戳
-        validation_duration_ms:
-          type: integer
-          description: 验证执行耗时（毫秒）
-        pre_conversation_check:
-          type: object
-          description: 对话开始前验证检查结果
-          properties:
-            executed:
-              type: boolean
-              description: 是否执行了预对话检查
-            passed:
-              type: boolean
-              description: 预对话检查是否通过
-            verification_mark:
-              type: string
-              description: 验证通过标记
-            baseline_comparison:
-              type: object
-              properties:
-                previous_style_score:
-                  type: number
-                  minimum: 0
-                  maximum: 1
-                  description: 前次风格评分
-                current_style_score:
-                  type: number
-                  minimum: 0
-                  maximum: 1
-                  description: 当前风格评分
-                parameter_match_rate:
-                  type: number
-                  minimum: 0
-                  maximum: 1
-                  description: 参数匹配率
-        corrective_actions:
-          type: array
-          items:
-            type: string
-          description: 执行的纠正措施列表
-        validation_errors:
-          type: array
-          items:
-            type: object
-            properties:
-              error_type:
-                type: string
-                enum:
-                  - style_drift
-                  - parameter_mismatch
-                  - performance_degradation
-                  - consistency_violation
-              error_message:
-                type: string
-              severity:
-                type: string
-                enum:
-                  - low
-                  - medium
-                  - high
-                  - critical
-          description: 验证过程中发现的错误
+
