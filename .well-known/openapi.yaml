@@ -308,6 +308,26 @@ components:
                 - high
               default: auto
               description: 图像处理精度级别
+            format:
+              type: string
+              enum:
+                - jpeg
+                - png
+                - gif
+                - webp
+                - bmp
+                - tiff
+              description: 图像格式类型
+            dimensions:
+              type: object
+              properties:
+                width:
+                  type: integer
+                  description: 图像宽度（像素）
+                height:
+                  type: integer
+                  description: 图像高度（像素）
+              description: 图像尺寸信息
             alt_text:
               type: string
               description: 图像替代文本描述
@@ -329,6 +349,18 @@ components:
             url:
               type: string
               description: 音频URL或base64数据URI
+            format:
+              type: string
+              enum:
+                - mp3
+                - wav
+                - ogg
+                - m4a
+                - flac
+              description: 音频格式类型
+            duration:
+              type: number
+              description: 音频时长（秒）
             transcript:
               type: string
               description: 音频转录文本
@@ -350,6 +382,26 @@ components:
             url:
               type: string
               description: 视频URL或base64数据URI
+            format:
+              type: string
+              enum:
+                - mp4
+                - webm
+                - avi
+                - mov
+                - mkv
+              description: 视频格式类型
+            duration:
+              type: number
+              description: 视频时长（秒）
+            resolution:
+              type: string
+              enum:
+                - 480p
+                - 720p
+                - 1080p
+                - 4k
+              description: 视频分辨率
             thumbnail:
               type: string
               description: 视频缩略图URL
@@ -371,6 +423,19 @@ components:
             url:
               type: string
               description: 文档URL或base64数据URI
+            format:
+              type: string
+              enum:
+                - pdf
+                - docx
+                - txt
+                - md
+                - csv
+                - xlsx
+              description: 文档格式类型
+            pages:
+              type: integer
+              description: 文档页数
             extract_text:
               type: boolean
               default: true
