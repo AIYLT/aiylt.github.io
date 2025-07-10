@@ -280,8 +280,8 @@ components:
           properties:
             url:
               type: string
-              pattern: '^(https?://.*|data:image/.*|attachment://.*)$'
-              description: 图像URL（HTTP/HTTPS）、base64数据URI（data:image/*）或ChatGPT附件（attachment://）
+              pattern: '^(https?://.*|data:image/.*|attachment://.*|.*chatgpt\.com/backend-api/.*)$'
+              description: 图像URL（HTTP/HTTPS）、base64数据URI（data:image/*）、ChatGPT附件（attachment://）或ChatGPT后端API文件
             detail:
               type: string
               enum:
