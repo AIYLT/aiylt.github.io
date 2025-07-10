@@ -691,15 +691,15 @@ components:
 
         每个数据块都明确标识来自 o3-2025-04-16 模型
               example: |
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"7/09/2025，时间20:17:15","choices":[{"index":0,"delta":{"role":"assistant","content":{"reasoning":"开始分析用户请求..."}},"finish_reason":null}],"performance_metrics":{"response_time_ms":150,"reasoning_time_ms":300}}
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:15Z","choices":[{"index":0,"delta":{"role":"assistant","content":{"reasoning":"开始分析用户请求..."}},"finish_reason":null}],"performance_metrics":{"response_time_ms":150,"reasoning_time_ms":300}}
 
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"7/09/2025，时间20:17:16","choices":[{"index":0,"delta":{"content":{"analysis":"深度分析问题结构和解决路径..."}},"finish_reason":null}]}
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:16Z","choices":[{"index":0,"delta":{"content":{"analysis":"深度分析问题结构和解决路径..."}},"finish_reason":null}]}
 
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"7/09/2025，时间20:17:17","choices":[{"index":0,"delta":{"content":{"strategy":"制定具体执行方案..."}},"finish_reason":null}]}
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:17Z","choices":[{"index":0,"delta":{"content":{"strategy":"制定具体执行方案..."}},"finish_reason":null}]}
 
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"7/09/2025，时间20:17:18","choices":[{"index":0,"delta":{"content":{"risk_control":"风险评估与控制措施..."}},"finish_reason":null}]}
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:18Z","choices":[{"index":0,"delta":{"content":{"risk_control":"风险评估与控制措施..."}},"finish_reason":null}]}
 
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"7/09/2025，时间20:17:19","choices":[{"index":0,"delta":{"content":{"final_answer":"🎯 当前模型：OpenAI o3-2025-04-16\n\n基于五层结构化推理过程，最终答案如下..."}},"finish_reason":"stop"}],"quality_assurance":{"fact_verification":true,"hallucination_risk":"low"}}
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:19Z","choices":[{"index":0,"delta":{"content":{"final_answer":"🎯 当前模型：OpenAI o3-2025-04-16\n\n基于五层结构化推理过程，最终答案如下..."}},"finish_reason":"stop"}],"quality_assurance":{"fact_verification":true,"hallucination_risk":"low"}}
 
           data: [DONE]
     ToolConfig:
