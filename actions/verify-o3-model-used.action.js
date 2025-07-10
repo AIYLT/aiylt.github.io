@@ -101,6 +101,9 @@ class O3ModelValidator {
                 }
             }
 
+            // 添加timestamp字段到响应体中
+            responseData.timestamp = new Date().toISOString();
+
             return new Response(JSON.stringify(responseData), {
                 status: response.status,
                 statusText: response.statusText,
