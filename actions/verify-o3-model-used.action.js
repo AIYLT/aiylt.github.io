@@ -102,7 +102,14 @@ class O3ModelValidator {
             }
 
             // 添加timestamp字段到响应体中
-            responseData.timestamp = new Date().toISOString();
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            responseData.timestamp = `${year}年${month}月${day}日 ${hours}:${minutes}:${seconds}`;
 
             return new Response(JSON.stringify(responseData), {
                 status: response.status,
