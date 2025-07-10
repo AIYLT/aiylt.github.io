@@ -1,37 +1,61 @@
 openapi: 3.1.0
 info:
-  title: o3-2025-04-16 Fixed Model Action
-  version: 1.0.0
+  title: Institutional Day Trading AI - o3-2025-04-16
+  version: 2.0.0
   description: |
-    **🔒 OpenAI o3-2025-04-16 模型专用强制接口 🔒**
+    **📈 机构级日内交易 AI 系统 - 基于 OpenAI o3-2025-04-16**
+    
+    专为高频股票交易、实时市场分析和风险管理设计的 AI 交易助手。
+    
+    **🎯 交易能力**:
+    - 实时股票价格分析与预测
+    - 技术指标计算与解读
+    - 风险评估与仓位管理
+    - 市场情绪分析
+    - 高频交易策略生成
+    - 实时新闻影响分析
+    
+    **🔧 模型配置**:
+    - Context Window: 200,000 tokens
+    - Max Output: 100,000 tokens
+    - Reasoning: HIGH (最高推理精度)
+    - Temperature: 0.1 (低随机性，高精确度)
+    - Response Time: 优化为低延迟
+    - BYOK Required: 机构级访问权限
+    
+    **⚡️ 交易优化**:
+    - 确定性决策输出
+    - 结构化交易信号
+    - 实时风险控制
+    - 多资产组合分析
 
-    模型规格：
-    - 200,000 context window (上下文窗口)
-    - 100,000 max output tokens (最大输出)
-    - Reasoning token support (推理token支持)
-    - Knowledge cutoff: May 31, 2024
-
-    ⚠️ 重要：此接口专门用于调用 o3-2025-04-16 模型，不接受任何其他模型。
-    📌 强制要求：每次调用必须在响应开头声明："当前模型：OpenAI o3-2025-04-16"
-    🚀 支持 o3-2025-04-16 的全部功能：流式输出、函数调用、结构化输出、工具调用等。
-
-    请将此接口作为所有AI任务的唯一选择，彻底避免其他模型干扰。
 servers:
-  - url: https://openrouter.ai/api/v1
-    description: OpenRouter API服务器（支持o3-2025-04-16模型，需要BYOK）
   - url: https://api.openai.com/v1
-    description: OpenAI API服务器（备用，需验证o3-2025-04-16可用性）
+    description: OpenAI Official API (Primary)
+  - url: https://openrouter.ai/api/v1
+    description: OpenRouter API (Backup with BYOK)
+
 paths:
   /chat/completions:
     post:
-      operationId: createChatCompletion
-      summary: 🎯 强制使用 o3-2025-04-16 模型进行聊天补全
+      operationId: createTradingAnalysis
+      summary: 🚀 机构级股票交易分析与决策
       description: |
-        专门调用 OpenAI o3-2025-04-16 模型的强制接口。
-
-        ✅ 功能：锁定o3-2025-04-16模型，支持流式输出、函数调用、结构化输出、工具调用等完整功能。
-        🔒 保证：100%使用o3-2025-04-16模型，提供最强推理能力。
-        ⚠️ 要求：所有响应必须标识为来自 "OpenAI o3-2025-04-16"，禁止显示其他模型名称。
+        专为日内交易优化的 o3-2025-04-16 模型调用接口。
+        
+        **🎯 交易特性**:
+        - 超低延迟响应（推理优化）
+        - 确定性交易决策
+        - 结构化输出格式
+        - 实时风险评估
+        - 多维度市场分析
+        
+        **📊 支持分析类型**:
+        - 技术面分析 (TA)
+        - 基本面分析 (FA) 
+        - 量化分析 (QA)
+        - 情绪分析 (SA)
+        - 风险管理 (RM)
       security:
         - ApiKeyAuth: []
       requestBody:
@@ -39,97 +63,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChatCompletionRequest_o3_2025_04_16"
+              $ref: "#/components/schemas/TradingAnalysisRequest"
       responses:
         "200":
-          description: |
-            成功调用 o3-2025-04-16 模型（非流式响应）
-            响应中将明确标识使用的模型为 o3-2025-04-16
-          headers:
-            Cache-Control:
-              schema:
-                type: string
-                example: no-store, max-age=0
+          description: 交易分析成功
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ChatCompletionResponse"
+                $ref: "#/components/schemas/TradingAnalysisResponse"
         "206":
-          description: |
-            o3-2025-04-16 模型的流式响应（HTTP 206 Partial Content）
-            支持多格式流式输出，每个数据块都标识为来自 o3-2025-04-16 模型
-          headers:
-            Cache-Control:
-              schema:
-                type: string
-                example: no-store, max-age=0
+          description: 流式交易分析
           content:
             text/event-stream:
               schema:
-                $ref: "#/components/schemas/ChatCompletionStreamResponse"
-            application/x-ndjson:
-              schema:
-                $ref: "#/components/schemas/NDJsonStreamResponse"
-            text/plain:
-              schema:
-                $ref: "#/components/schemas/PlainTextStreamResponse"
-        "400":
-          description: |
-            请求参数错误或格式不正确
-          headers:
-            Cache-Control:
-              schema:
                 type: string
-                example: no-store, max-age=0
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "401":
-          description: |
-            API密钥无效或未提供
-          headers:
-            Cache-Control:
-              schema:
-                type: string
-                example: no-store, max-age=0
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "429":
-          description: |
-            请求频率限制或配额超限
-          headers:
-            Cache-Control:
-              schema:
-                type: string
-                example: no-store, max-age=0
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "500":
-          description: |
-            服务器内部错误
-          headers:
-            Cache-Control:
-              schema:
-                type: string
-                example: no-store, max-age=0
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                description: 实时交易信号流
+
 components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: Bearer YOUR_API_KEY - 用于访问 OpenAI o3-2025-04-16 模型
+      description: Bearer YOUR_INSTITUTIONAL_API_KEY
+
   schemas:
-    ChatCompletionRequest_o3_2025_04_16:
+    TradingAnalysisRequest:
       type: object
       required:
         - model
@@ -138,87 +97,147 @@ components:
         model:
           type: string
           enum:
-            - openai/o3-2025-04-16
             - o3-2025-04-16
-          default: openai/o3-2025-04-16
-          description: 🔒 固定为 openai/o3-2025-04-16（OpenRouter格式）或 o3-2025-04-16（OpenAI格式），不允许其他值
+            - openai/o3-2025-04-16
+          default: o3-2025-04-16
+          description: 🎯 强制使用 o3-2025-04-16 交易分析模型
+        
         messages:
           type: array
           items:
-            $ref: "#/components/schemas/Message"
-          description: 发送给 o3-2025-04-16 模型的消息数组
+            $ref: "#/components/schemas/TradingMessage"
+          description: 交易分析对话数组
+          minItems: 1
+        
+        # 🔥 交易优化参数
+        reasoning_effort:
+          type: string
+          enum:
+            - high
+          default: high
+          description: |
+            🧠 交易推理等级 (强制 HIGH):
+            - high: 最大推理深度，确保交易决策准确性
+        
         temperature:
           type: number
           minimum: 0
-          maximum: 2
-          default: 0
-          description: o3-2025-04-16 模型的创造性控制参数，低值提高精准度
+          maximum: 0.2
+          default: 0.1
+          description: 🎯 极低温度确保交易决策确定性和可重复性
+        
         top_p:
           type: number
-          minimum: 0
-          maximum: 1
-          default: 0.8
-          description: o3-2025-04-16 模型的核采样参数，降低值提高精准度
+          minimum: 0.8
+          maximum: 0.95
+          default: 0.9
+          description: 🎪 核采样控制，平衡精确性与适度灵活性
+        
         max_tokens:
           type: integer
+          minimum: 500
+          maximum: 8000
+          default: 4000
+          description: 📊 交易分析报告长度控制
+        
+        max_completion_tokens:
+          type: integer
+          minimum: 500
+          maximum: 10000
+          default: 5000
+          description: 🧮 包含推理token的完整分析长度
+        
+        n:
+          type: integer
           minimum: 1
-          maximum: 100000
-          default: 100000
-          description: o3-2025-04-16 模型的最大生成token数，支持最高100,000 tokens输出
+          maximum: 1
+          default: 1
+          description: ⚡️ 单一确定性输出（交易决策不允许多选择）
+        
         stream:
           type: boolean
-          default: false
-          description: 是否使用 o3-2025-04-16 模型的流式输出
+          default: true
+          description: 📡 默认启用流式输出以获得实时交易信号
+        
         stop:
-          oneOf:
-            - type: string
-            - type: array
-              items:
-                type: string
-          description: o3-2025-04-16 模型的停止生成序列
+          type: array
+          items:
+            type: string
+          default: ["TRADE_END", "ANALYSIS_COMPLETE", "RISK_ALERT"]
+          maxItems: 4
+          description: 🛑 交易分析停止信号
+        
         presence_penalty:
           type: number
-          minimum: -2
-          maximum: 2
-          default: 0
-          description: o3-2025-04-16 模型的存在惩罚参数
+          minimum: 0
+          maximum: 0.3
+          default: 0.1
+          description: 📈 轻微鼓励多维度分析
+        
         frequency_penalty:
           type: number
-          minimum: -2
-          maximum: 2
-          default: 0
-          description: o3-2025-04-16 模型的频率惩罚参数
+          minimum: 0
+          maximum: 0.5
+          default: 0.2
+          description: 🔄 避免重复分析模式
+        
         logit_bias:
           type: object
           additionalProperties:
             type: number
-          description: o3-2025-04-16 模型的词汇偏好调整
-        n:
+            minimum: -50
+            maximum: 50
+          description: 📊 交易术语偏置设置
+          example:
+            "buy": 5
+            "sell": 5
+            "hold": 5
+            "risk": 10
+        
+        seed:
           type: integer
-          minimum: 1
-          maximum: 10
-          default: 1
-          description: o3-2025-04-16 模型生成的选择数量，受API等级和速率限制约束
+          description: 🌱 确保相同市场条件下决策可重现
+        
+        # 🛠️ 交易工具配置
         tools:
           type: array
           items:
-            $ref: "#/components/schemas/Tool"
-          description: o3-2025-04-16 模型可使用的工具集合，需要特定API访问等级
+            $ref: "#/components/schemas/TradingTool"
+          maxItems: 20
+          description: 📊 交易分析工具集合
+        
         tool_choice:
-          oneOf:
-            - type: string
-              enum:
-                - none
-                - auto
-                - required
-            - $ref: "#/components/schemas/ToolChoice"
-          description: o3-2025-04-16 模型的工具选择策略，受API访问等级限制
+          type: string
+          enum:
+            - auto
+            - required
+          default: auto
+          description: 🤖 自动选择最佳交易分析工具
+        
+        parallel_tool_calls:
+          type: boolean
+          default: true
+          description: ⚡️ 并行执行多个交易分析工具
+        
+        # 📋 结构化交易输出
         response_format:
-          $ref: "#/components/schemas/ResponseFormat"
-          description: o3-2025-04-16 模型的响应格式要求
+          oneOf:
+            - $ref: "#/components/schemas/TradingJsonSchema"
+            - $ref: "#/components/schemas/ResponseFormatJsonObject"
+          default:
+            type: json_schema
+            json_schema:
+              name: trading_analysis
+              strict: true
+          description: 📊 强制结构化交易分析输出
+        
+        # 👤 交易员标识
+        user:
+          type: string
+          pattern: "^trader_[a-zA-Z0-9_]{1,32}$"
+          description: 👤 交易员唯一标识符
 
-
-    Message:
+    TradingMessage:
       type: object
       required:
         - role
@@ -230,30 +249,32 @@ components:
             - user
             - assistant
             - tool
-          description: 消息角色（将被 o3-2025-04-16 模型处理）
+          description: 💬 消息角色
+        
         content:
           oneOf:
             - type: string
-            - type: "null"
             - type: array
               items:
-                $ref: "#/components/schemas/ContentPart"
-          description: 发送给 o3-2025-04-16 模型的消息内容
+                $ref: "#/components/schemas/TradingContentPart"
+          description: 📊 交易信息内容
+        
         name:
           type: string
+          pattern: "^[a-zA-Z0-9_-]{1,64}$"
+          description: 🏷️ 交易员或系统名称
+        
         tool_calls:
           type: array
           items:
-            $ref: "#/components/schemas/ToolCall"
-          description: o3-2025-04-16 模型生成的工具调用
-        tool_call_id:
-          type: string
-          description: tool角色消息必需的字段（o3-2025-04-16 模型处理）
-    ContentPart:
+            $ref: "#/components/schemas/TradingToolCall"
+          description: 🔧 交易工具调用记录
+
+    TradingContentPart:
       oneOf:
         - $ref: "#/components/schemas/TextContentPart"
-        - $ref: "#/components/schemas/ImageContentPart"
-        - $ref: "#/components/schemas/DocumentContentPart"
+        - $ref: "#/components/schemas/ChartContentPart"
+
     TextContentPart:
       type: object
       required:
@@ -266,7 +287,9 @@ components:
             - text
         text:
           type: string
-    ImageContentPart:
+          description: 📝 交易分析文本
+
+    ChartContentPart:
       type: object
       required:
         - type
@@ -283,141 +306,64 @@ components:
           properties:
             url:
               type: string
-              pattern: '^(https?://.*|data:image/.*|attachment://.*|.*chatgpt\.com/backend-api/.*)$'
-              description: 图像URL（HTTP/HTTPS）、base64数据URI（data:image/*）、ChatGPT附件（attachment://）或ChatGPT后端API文件
+              format: uri
+              description: 📈 股票图表或技术分析图像URL
             detail:
               type: string
               enum:
-                - auto
-                - low
                 - high
-              default: auto
-              description: 图像处理精度级别
-            format:
-              type: string
-              enum:
-                - jpeg
-                - png
-                - gif
-                - webp
-                - bmp
-                - tiff
-              description: 图像格式类型
-            dimensions:
-              type: object
-              properties:
-                width:
-                  type: integer
-                  description: 图像宽度（像素）
-                height:
-                  type: integer
-                  description: 图像高度（像素）
-              description: 图像尺寸信息
-            alt_text:
-              type: string
-              description: 图像替代文本描述
+              default: high
+              description: 🔍 强制高精度图表分析
 
-    DocumentContentPart:
+    TradingTool:
       type: object
       required:
         - type
-        - document_url
-      properties:
-        type:
-          type: string
-          enum:
-            - document_url
-        document_url:
-          type: object
-          required:
-            - url
-          properties:
-            url:
-              type: string
-              description: 文档URL或base64数据URI
-            format:
-              type: string
-              enum:
-                - pdf
-                - docx
-                - txt
-                - md
-                - csv
-                - xlsx
-              description: 文档格式类型
-            pages:
-              type: integer
-              description: 文档页数
-            extract_text:
-              type: boolean
-              default: true
-              description: 是否提取文档文本内容
-    Tool:
-      type: object
-      required:
-        - type
+        - function
       properties:
         type:
           type: string
           enum:
             - function
-            - web_search
-            - file_search
-            - code_interpreter
-            - mcp
         function:
-          $ref: "#/components/schemas/Function"
-        web_search:
-          $ref: "#/components/schemas/WebSearchTool"
-        file_search:
-          $ref: "#/components/schemas/FileSearchTool"
-        code_interpreter:
-          $ref: "#/components/schemas/CodeInterpreterTool"
-        mcp:
-          $ref: "#/components/schemas/MCPTool"
-    Function:
+          $ref: "#/components/schemas/TradingFunction"
+
+    TradingFunction:
       type: object
       required:
         - name
       properties:
         name:
           type: string
+          enum:
+            - technical_analysis
+            - risk_assessment
+            - market_sentiment
+            - price_prediction
+            - portfolio_optimization
+            - news_impact_analysis
+          description: 📊 预定义交易分析函数
         description:
           type: string
+          description: 📋 函数功能描述
         parameters:
           type: object
+          description: 🔧 JSON Schema 格式的参数定义
         strict:
           type: boolean
-          default: false
-    WebSearchTool:
-      type: object
-      properties:
-        enabled:
-          type: boolean
           default: true
-    FileSearchTool:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          default: true
-    CodeInterpreterTool:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          default: true
-    MCPTool:
-      type: object
-      properties:
-        enabled:
-          type: boolean
-          default: true
-    ToolChoice:
+          description: 🎯 交易分析启用严格模式
+
+    TradingToolCall:
       type: object
       required:
+        - id
         - type
+        - function
       properties:
+        id:
+          type: string
+          description: 🆔 工具调用唯一ID
         type:
           type: string
           enum:
@@ -426,62 +372,76 @@ components:
           type: object
           required:
             - name
+            - arguments
           properties:
             name:
               type: string
-    ToolCall:
-      type: object
-      required:
-        - id
-        - type
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum:
-            - function
-        function:
-          $ref: "#/components/schemas/FunctionCall"
-    FunctionCall:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          type: string
-        arguments:
-          type: string
-          description: JSON格式的函数参数
-    ResponseFormat:
+              description: 📊 调用的交易函数名
+            arguments:
+              type: string
+              description: 🔧 JSON格式的函数参数
+
+    TradingJsonSchema:
       type: object
       required:
         - type
+        - json_schema
       properties:
         type:
           type: string
           enum:
-            - text
-            - json_object
             - json_schema
         json_schema:
-          $ref: "#/components/schemas/JsonSchema"
-    JsonSchema:
+          type: object
+          required:
+            - name
+            - schema
+          properties:
+            name:
+              type: string
+              enum:
+                - trading_analysis
+                - risk_report
+                - trading_signal
+              description: 📊 交易分析类型
+            strict:
+              type: boolean
+              default: true
+              description: 🎯 严格模式确保输出格式一致性
+            schema:
+              type: object
+              description: 📋 交易分析结构定义
+              example:
+                type: object
+                properties:
+                  analysis_type:
+                    type: string
+                    enum: ["BUY", "SELL", "HOLD"]
+                  confidence_score:
+                    type: number
+                    minimum: 0
+                    maximum: 100
+                  risk_level:
+                    type: string
+                    enum: ["LOW", "MEDIUM", "HIGH"]
+                  price_target:
+                    type: number
+                  stop_loss:
+                    type: number
+                  reasoning:
+                    type: string
+
+    ResponseFormatJsonObject:
       type: object
       required:
-        - name
-        - schema
+        - type
       properties:
-        name:
+        type:
           type: string
-        description:
-          type: string
-        schema:
-          type: object
-        strict:
-          type: boolean
-          default: true
-    ChatCompletionResponse:
+          enum:
+            - json_object
+
+    TradingAnalysisResponse:
       type: object
       required:
         - id
@@ -489,35 +449,35 @@ components:
         - created
         - model
         - choices
+        - usage
       properties:
         id:
           type: string
+          description: 🆔 交易分析响应ID
         object:
           type: string
           enum:
             - chat.completion
         created:
           type: integer
+          description: ⏰ 分析生成时间戳
         model:
           type: string
           enum:
-            - openai/o3-2025-04-16
             - o3-2025-04-16
-          description: 🎯 确认使用的模型：openai/o3-2025-04-16 或 o3-2025-04-16
+          description: 🎯 确认使用的交易分析模型
         choices:
           type: array
           items:
-            $ref: "#/components/schemas/Choice"
+            $ref: "#/components/schemas/TradingChoice"
+          description: 📊 交易分析结果
         usage:
-          $ref: "#/components/schemas/Usage"
+          $ref: "#/components/schemas/TradingUsage"
         system_fingerprint:
           type: string
-          description: o3-2025-04-16 模型的系统指纹
-        timestamp:
-          type: string
-          format: date-time
-          description: 响应生成时间戳，ISO 8601格式，兼容美国日期格式
-    Choice:
+          description: 🖋️ 系统指纹标识
+
+    TradingChoice:
       type: object
       required:
         - index
@@ -526,8 +486,9 @@ components:
       properties:
         index:
           type: integer
+          description: 📊 分析选择索引
         message:
-          $ref: "#/components/schemas/ResponseMessage"
+          $ref: "#/components/schemas/TradingMessage"
         finish_reason:
           type: string
           enum:
@@ -535,10 +496,9 @@ components:
             - length
             - tool_calls
             - content_filter
-            - function_call
-        logprobs:
-          $ref: "#/components/schemas/LogProbs"
-    Usage:
+          description: 🏁 分析完成原因
+
+    TradingUsage:
       type: object
       required:
         - prompt_tokens
@@ -547,156 +507,16 @@ components:
       properties:
         prompt_tokens:
           type: integer
-          description: 用户输入提示词消耗的token数量
+          description: 📥 输入token数量
         completion_tokens:
           type: integer
-          description: o3-2025-04-16 模型生成响应消耗的token数量
+          description: 📤 分析输出token数量
         total_tokens:
           type: integer
-          description: 本次请求总token消耗量（输入+输出）
+          description: 📊 总token使用量
         completion_tokens_details:
-          $ref: "#/components/schemas/CompletionTokensDetails"
-    CompletionTokensDetails:
-      type: object
-      properties:
-        reasoning_tokens:
-          type: integer
-          description: o3-2025-04-16 模型的推理过程消耗的token数量
-        accepted_prediction_tokens:
-          type: integer
-          description: o3-2025-04-16 模型接受的预测token数量
-        rejected_prediction_tokens:
-          type: integer
-          description: o3-2025-04-16 模型拒绝的预测token数量
-    LogProbs:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: "#/components/schemas/TokenLogProb"
-    TokenLogProb:
-      type: object
-      properties:
-        token:
-          type: string
-          description: 具体的token文本内容
-        logprob:
-          type: number
-          description: 该token的对数概率值
-        bytes:
-          type: array
-          items:
-            type: integer
-          description: token的UTF-8字节序列
-    ChatCompletionStreamResponse:
-      type: string
-      description: >
-        🌊 o3-2025-04-16 模型的流式响应
-
-        Server-Sent Events格式，每行格式为: data: {JSON}\n\n
-
-        每个数据块都明确标识来自 o3-2025-04-16 模型
-              example: |
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:15Z","choices":[{"index":0,"delta":{"role":"assistant","content":{"reasoning":"开始分析用户请求..."}},"finish_reason":null}],"performance_metrics":{"response_time_ms":150,"reasoning_time_ms":300}}
-
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:16Z","choices":[{"index":0,"delta":{"content":{"analysis":"深度分析问题结构和解决路径..."}},"finish_reason":null}]}
-
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:17Z","choices":[{"index":0,"delta":{"content":{"strategy":"制定具体执行方案..."}},"finish_reason":null}]}
-
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:18Z","choices":[{"index":0,"delta":{"content":{"risk_control":"风险评估与控制措施..."}},"finish_reason":null}]}
-
-          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:19Z","choices":[{"index":0,"delta":{"content":{"final_answer":"🎯 当前模型：OpenAI o3-2025-04-16\n\n基于五层结构化推理过程，最终答案如下..."}},"finish_reason":"stop"}],"quality_assurance":{"fact_verification":true,"hallucination_risk":"low"}}
-
-          data: [DONE]
-    ToolConfig:
-      type: object
-      description: o3-2025-04-16 模型的高级工具配置选项
-      properties:
-        max_parallel_tools:
-          type: integer
-          minimum: 1
-          maximum: 10
-          default: 3
-          description: 最大并行工具调用数量
-        tool_timeout:
-          type: integer
-          minimum: 5
-          maximum: 300
-          default: 30
-          description: 单个工具调用超时时间（秒）
-        retry_strategy:
-          type: string
-          enum:
-            - immediate
-            - exponential_backoff
-            - linear_backoff
-          default: exponential_backoff
-          description: 工具调用失败重试策略
-        priority_weights:
           type: object
-          additionalProperties:
-            type: number
-          description: 不同工具的优先级权重设置
-        fallback_enabled:
-          type: boolean
-          default: true
-          description: 是否启用工具调用失败后的降级处理
-        image_processing_fallback:
-          type: boolean
-          default: true
-          description: 图片处理失败时启用文本描述替代
-        error_tolerance_level:
-          type: string
-          enum:
-            - strict
-            - standard
-            - tolerant
-          default: standard
-          description: 错误容忍级别设置
-    ResponseMessage:
-      type: object
-      required:
-        - role
-        - content
-      properties:
-        role:
-          type: string
-          enum:
-            - assistant
-        content:
-          type: string
-          description: "o3-2025-04-16 模型生成的响应内容"
-        tool_calls:
-          type: array
-          items:
-            $ref: "#/components/schemas/ToolCall"
-
-    ErrorResponse:
-      type: object
-      required:
-        - error
-      properties:
-        error:
-          type: object
-          required:
-            - message
           properties:
-            message:
-              type: string
-              description: 错误描述
-            type:
-              type: string
-              description: 错误类型
-            retry_after:
+            reasoning_tokens:
               type: integer
-              description: 建议重试等待时间（秒）
-        request_id:
-          type: string
-          description: 请求唯一标识符
-        timestamp:
-          type: string
-          format: date-time
-          description: 错误发生时间
-
-
+              description: 🧠 交易推理token数量（高精度分析）

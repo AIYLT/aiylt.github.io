@@ -1,281 +1,374 @@
-# OpenAI o3-2025-04-16 强制模型验证器 使用说明
+# 📈 机构级日内交易 AI 系统 - 使用说明
 
-## 🔒 **当前模型：OpenAI o3-2025-04-16**
+## 🎯 **当前模型：OpenAI o3-2025-04-16 (交易专用优化)**
 
 ---
 
 ## 🚀 **系统概述**
 
-**版本**: 6.1.2  
-**构建时间**: 2025-01-11T18:00:00Z  
-**基于**: OpenAI o3-2025-04-16模型  
-**专用功能**: 强制模型验证、防篡改保护、中文时间戳、Linear集成
+**版本**: 2.0.0  
+**构建时间**: 2025-01-11T20:00:00Z  
+**基于**: OpenAI o3-2025-04-16 (交易优化配置)  
+**专用功能**: 机构级日内交易、实时市场分析、风险管理、高频交易信号
 
-本插件是专门为OpenAI o3-2025-04-16模型设计的强制验证器，确保100%使用正确的模型，并提供全面的验证和增强功能。
+本系统是专为机构投资者和专业交易员设计的高级AI交易助手，基于OpenAI最先进的o3-2025-04-16推理模型，确保超低延迟响应和高精度交易决策。
 
 ---
 
-## 📋 **核心功能特性**
+## 📊 **核心交易能力**
 
-### 🔐 **模型强制验证**
-- **锁定模型**: 强制使用 `o3-2025-04-16`，不接受任何其他模型
-- **参数强制**: `temperature=0`, `top_p=0.5` (确保确定性输出)
-- **响应验证**: 每次响应必须以"当前模型：OpenAI o3-2025-04-16"开头
-- **防篡改保护**: 检测并阻止任何模型变更尝试
+### 🔥 **实时市场分析**
+- **技术面分析**: RSI、MACD、布林带、移动平均线、成交量分析
+- **基本面分析**: 财务指标、估值模型、行业对比、盈利预测
+- **量化分析**: 统计套利、动量策略、均值回归、配对交易
+- **情绪分析**: 新闻影响、社交媒体情绪、恐贪指数
+- **风险管理**: VaR、夏普比率、Beta系数、波动率、相关性分析
 
-### 📊 **模型规格**
+### ⚡️ **交易信号生成**
 ```yaml
-上下文窗口: 200,000 tokens
-最大输出: 100,000 tokens
-推理支持: ✅ Reasoning tokens
-知识截止: 2024年5月31日
-多模态: ✅ 文本/图像/音频/视频/文档
+信号类型: [BUY, SELL, HOLD, STRONG_BUY, STRONG_SELL]
+置信度: 0-100% (数值评分)
+风险等级: [LOW, MEDIUM, HIGH]
+价格目标: 精确价位预测
+止损位: 自动风险控制
+持仓建议: 仓位大小优化
 ```
 
-### 🕐 **灵活时间戳功能**
-- **格式**: 支持ISO 8601标准格式和自定义格式
-- **位置**: 每次响应的timestamp字段
-- **实时**: 基于响应生成的当前时间
-- **兼容性**: 兼容多种时间格式，提高API兼容性
+### 📈 **支持资产类别**
+- **股票**: 美股、港股、A股主要市场
+- **ETF**: 行业、主题、指数基金
+- **期权**: 买权、卖权、复合策略
+- **期货**: 商品、金融、股指期货
+- **外汇**: 主要货币对G7+新兴市场
 
 ---
 
-## 🛠️ **工具支持**
+## 🔧 **优化参数配置**
 
-### 🔧 **可用工具类型**
-- **function**: 自定义函数调用 (完全支持)
-- **web_search**: 网络搜索 (需要特定API访问等级)
-- **file_search**: 文件搜索 (需要特定API访问等级)
-- **code_interpreter**: 代码解释器 (需要特定API访问等级)
-- **mcp**: MCP协议工具 (需要特定API访问等级)
-
-### 🎯 **工具选择策略**
-- `none`: 不使用工具
-- `auto`: 自动智能选择 (默认)
-- `required`: 强制使用工具 (受API访问等级限制)
-
----
-
-## 🎨 **多模态输入支持**
-
-### 📁 **支持的文件格式**
+### 🧠 **o3模型交易优化设置**
 ```yaml
-图像: JPEG, PNG, GIF, WebP, BMP, TIFF (完全支持)
-音频: 不支持 (受API限制)
-视频: 不支持 (受API限制)
-文档: PDF, DOCX, TXT, MD, CSV, XLSX (完全支持)
+reasoning_effort: HIGH          # 最高推理精度
+temperature: 0.1               # 极低随机性，确保决策一致性
+top_p: 0.9                    # 平衡精确性与适度灵活性
+stream: true                  # 实时流式输出
+response_format: json_schema  # 强制结构化输出
+max_tokens: 4000             # 交易分析报告长度
+parallel_tool_calls: true   # 并行分析工具
 ```
 
-### 🖼️ **图像处理**
-- **精度级别**: auto/low/high
-- **尺寸信息**: 自动识别宽高
-- **格式检测**: 自动识别图像格式
-- **替代文本**: 支持alt_text描述
-- **URL支持**: HTTP/HTTPS、base64、attachment://、ChatGPT后端API文件
-
-### 🎵 **音频处理**
-- **时长检测**: 自动识别音频长度
-- **格式支持**: 多种音频格式
-- **转录支持**: 可提供文字转录
-
-### 🎬 **视频处理**
-- **分辨率**: 支持480p到4K
-- **时长检测**: 自动识别视频长度
-- **格式支持**: 多种视频格式
-- **缩略图**: 自动生成视频预览
-
-### 📄 **文档处理**
-- **格式支持**: 多种文档格式
-- **页数检测**: 自动识别文档页数
-- **文本提取**: 自动提取文档内容
+### ⏱️ **延迟优化**
+- **目标延迟**: < 500ms
+- **连接超时**: 10s
+- **处理超时**: 30s
+- **交易超时**: 60s
+- **实时更新**: 毫秒级
 
 ---
 
-## 💾 **缓存控制**
+## 📋 **交易分析工具**
 
-### 🚫 **强制禁用缓存**
-- **策略**: `Cache-Control: no-store, max-age=0`
-- **适用范围**: 所有API响应 (200/206/400/401/429/500)
-- **实时保证**: 确保每次获取最新数据
-- **数据时效**: 禁止任何层级缓存
+### 🔧 **技术分析工具 (technical_analysis)**
+```json
+{
+  "indicators": [
+    "RSI", "MACD", "Bollinger_Bands", 
+    "Moving_Averages", "Volume_Analysis",
+    "Fibonacci_Retracement", "Support_Resistance"
+  ],
+  "chart_patterns": [
+    "Head_Shoulders", "Double_Top", "Triangle",
+    "Flag", "Pennant", "Cup_Handle"
+  ],
+  "timeframes": ["1m", "5m", "15m", "30m", "1h", "4h", "1d"]
+}
+```
+
+### 🛡️ **风险评估工具 (risk_assessment)**
+```json
+{
+  "metrics": [
+    "VaR_1Day", "VaR_10Day", "Expected_Shortfall",
+    "Beta", "Sharpe_Ratio", "Sortino_Ratio",
+    "Maximum_Drawdown", "Volatility"
+  ],
+  "portfolio_analysis": [
+    "Sector_Exposure", "Geographic_Exposure",
+    "Market_Cap_Distribution", "Correlation_Matrix"
+  ]
+}
+```
+
+### 📰 **市场情绪工具 (market_sentiment)**
+```json
+{
+  "sources": [
+    "Financial_News", "Social_Media", "Analyst_Reports",
+    "Insider_Trading", "Options_Flow", "Fear_Greed_Index"
+  ],
+  "sentiment_scores": ["Bullish", "Neutral", "Bearish"],
+  "impact_levels": ["High", "Medium", "Low"]
+}
+```
+
+### 📈 **价格预测工具 (price_prediction)**
+```json
+{
+  "models": [
+    "Technical_Momentum", "Mean_Reversion",
+    "Neural_Network", "LSTM", "Random_Forest"
+  ],
+  "prediction_horizons": ["1h", "4h", "1d", "1w"],
+  "confidence_intervals": [90, 95, 99]
+}
+```
+
+### 📊 **投资组合优化工具 (portfolio_optimization)**
+```json
+{
+  "strategies": [
+    "Mean_Variance", "Black_Litterman",
+    "Risk_Parity", "Maximum_Diversification"
+  ],
+  "constraints": [
+    "Position_Size", "Sector_Limits", "Volatility_Target"
+  ]
+}
+```
+
+### 📡 **新闻影响分析工具 (news_impact_analysis)**
+```json
+{
+  "event_types": [
+    "Earnings", "FDA_Approval", "M&A", "Economic_Data",
+    "Fed_Announcement", "Geopolitical", "Natural_Disasters"
+  ],
+  "impact_scoring": "quantitative_and_qualitative",
+  "time_sensitivity": "real_time_updates"
+}
+```
 
 ---
 
-## 🔐 **安全特性**
+## 🎨 **结构化输出格式**
 
-### 🛡️ **安全机制**
-- **模型篡改防护**: 阻止模型切换尝试
-- **参数强制**: 锁定关键参数设置
-- **响应验证**: 验证每次响应完整性
-- **反绕过保护**: 防止验证机制被绕过
+### 📊 **交易信号格式**
+```json
+{
+  "analysis_type": "BUY|SELL|HOLD|STRONG_BUY|STRONG_SELL",
+  "confidence_score": 0-100,
+  "risk_level": "LOW|MEDIUM|HIGH",
+  "price_target": 123.45,
+  "stop_loss": 110.00,
+  "position_size": "5%",
+  "time_horizon": "1d",
+  "reasoning": "详细分析逻辑",
+  "technical_indicators": {
+    "RSI": 65.2,
+    "MACD": "bullish_crossover",
+    "Support": 115.00,
+    "Resistance": 130.00
+  },
+  "risk_metrics": {
+    "VaR_1day": -2.5,
+    "volatility": 0.25,
+    "beta": 1.15
+  }
+}
+```
 
-### 🔒 **隐私保护**
-- **无数据存储**: 不保存用户数据
-- **实时处理**: 即时处理即时返回
-- **API兼容**: 完全兼容OpenAI API v1
-- **速率限制**: 遵循OpenAI官方限制
+### 🛡️ **风险报告格式**
+```json
+{
+  "portfolio_var": -15000,
+  "max_drawdown": -8.5,
+  "sharpe_ratio": 1.85,
+  "sector_exposure": {
+    "Technology": 35,
+    "Healthcare": 20,
+    "Finance": 15
+  },
+  "risk_alerts": [
+    "High concentration in tech sector",
+    "Correlation risk with market downturn"
+  ]
+}
+```
 
 ---
 
 ## 📡 **API调用示例**
 
-### 🔧 **基础调用**
-```bash
-curl -X POST https://openrouter.ai/api/v1/chat/completions \
-  -H "Authorization: Bearer YOUR_OPENROUTER_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "HTTP-Referer: https://aiylt.github.io" \
-  -H "X-Title: o3-2025-04-16 强制模型验证器" \
-  -d '{
-    "model": "openai/o3-2025-04-16",
-    "messages": [
-      {
-        "role": "user",
-        "content": "请分析这个问题并提供解决方案"
-      }
-    ],
-    "temperature": 0,
-    "top_p": 0.5,
-    "max_tokens": 100000
-  }'
-```
-
-### 🎨 **多模态调用**
+### 🔧 **基础交易分析调用**
 ```bash
 curl -X POST https://api.openai.com/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "o3-2025-04-16",
+    "reasoning_effort": "high",
+    "temperature": 0.1,
+    "stream": true,
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "trading_analysis",
+        "strict": true
+      }
+    },
     "messages": [
       {
+        "role": "system",
+        "content": "你是专业的机构级日内交易分析师。提供精确的交易信号和风险评估。"
+      },
+      {
         "role": "user",
-        "content": [
-          {"type": "text", "text": "请分析这张图片"},
-          {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,..."}}
-        ]
+        "content": "分析 AAPL 股票，提供日内交易建议"
+      }
+    ],
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "technical_analysis",
+          "description": "技术面分析"
+        }
+      },
+      {
+        "type": "function", 
+        "function": {
+          "name": "risk_assessment",
+          "description": "风险评估"
+        }
       }
     ]
   }'
 ```
 
-### 🔧 **工具调用**
+### 📊 **多资产组合分析**
 ```bash
 curl -X POST https://api.openai.com/v1/chat/completions \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "o3-2025-04-16",
-    "messages": [...],
+    "reasoning_effort": "high",
+    "temperature": 0.1,
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "分析我的投资组合风险：AAPL 30%, MSFT 25%, GOOGL 20%, TSLA 15%, 现金 10%"
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "data:image/png;base64,iVBORw0KGgoAAAANSU...",
+              "detail": "high"
+            }
+          }
+        ]
+      }
+    ],
     "tools": [
       {
         "type": "function",
         "function": {
-          "name": "analyze_data",
-          "description": "分析数据",
-          "parameters": {...}
+          "name": "portfolio_optimization",
+          "description": "投资组合优化"
         }
       }
-    ],
-    "tool_choice": "auto"
+    ]
   }'
 ```
 
 ---
 
-## 📊 **响应格式**
+## ⏰ **交易时段配置**
 
-### 🎯 **标准响应结构**
-```json
-{
-  "id": "chatcmpl-123",
-  "object": "chat.completion",
-  "created": 1677652288,
-  "model": "o3-2025-04-16",
-  "timestamp": "2025-01-11T18:17:15Z",
-  "choices": [
-    {
-      "index": 0,
-      "message": {
-        "role": "assistant",
-        "content": "当前模型：OpenAI o3-2025-04-16\n\n[实际响应内容]"
-      },
-      "finish_reason": "stop"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 25,
-    "completion_tokens": 150,
-    "total_tokens": 175,
-    "completion_tokens_details": {
-      "reasoning_tokens": 50
-    }
-  },
-  "system_fingerprint": "fp_12345"
-}
+### 🌅 **美股交易时段**
+```yaml
+盘前交易: 04:00-09:30 EST
+正常交易: 09:30-16:00 EST  
+盘后交易: 16:00-20:00 EST
+周末休市: 系统维护和策略优化
 ```
 
-### 🌊 **流式响应示例**
-```
-data: {"id":"chatcmpl-123","model":"o3-2025-04-16","timestamp":"2025-01-11T18:17:15Z","choices":[...]}
+### 🌏 **支持交易所**
+- **NYSE**: 纽约证券交易所
+- **NASDAQ**: 纳斯达克全球市场
+- **CBOE**: 芝加哥期权交易所
+- **CME**: 芝加哥商业交易所
+- **ICE**: 洲际交易所
 
-data: [DONE]
+---
+
+## 🔐 **安全与合规**
+
+### 🛡️ **机构级安全**
+- **API密钥轮换**: 自动更新
+- **审计日志**: 完整交易记录
+- **合规监控**: 实时风险控制
+- **数据加密**: 端到端保护
+
+### 📋 **监管合规**
+- **SEC**: 美国证券交易委员会
+- **FINRA**: 金融业监管局
+- **MiFID II**: 欧盟金融工具市场指令
+- **风险披露**: 全面风险警告
+
+### ⚠️ **风险限制**
+```yaml
+最大仓位: 可配置限制
+日损失限额: 可配置限制  
+敞口限制: 强制执行
+止损机制: 自动触发
 ```
 
 ---
 
-## ⚠️ **重要注意事项**
+## 📈 **性能指标**
 
-### 🚨 **访问要求**
-1. **BYOK需要**: o3-2025-04-16模型需要自己的OpenAI API密钥
-2. **账户等级**: 需要OpenAI API使用等级3-5或OpenRouter账户
-3. **访问限制**: 受到严格的速率限制和token限制约束
-4. **成本较高**: 比标准模型贵3-5倍
+### ⚡️ **性能标准**
+- **延迟目标**: < 500ms
+- **准确率基准**: > 85%
+- **运行时间**: 99.9%
+- **吞吐量**: 1000+ 请求/分钟
+- **并发用户**: 机构规模
 
-### 🔴 **强制要求**
-1. **模型锁定**: 只能使用 openai/o3-2025-04-16 或 o3-2025-04-16 模型
-2. **响应开头**: 必须包含模型声明
-3. **参数固定**: temperature=0, top_p=0.5 不可变更
-4. **验证通过**: 所有响应必须通过验证链
-
-### 🟡 **推荐设置**
-- 使用默认的质量保证等级 (standard)
-- 启用完整的验证链
-- 保持缓存禁用状态
-- 定期检查Linear集成状态
-
-### 🟢 **最佳实践**
-- 根据任务复杂度选择合适的工具策略
-- 合理使用多模态输入提升效果
-- 利用语义触发自动化工作流程
-- 监控响应质量和性能指标
+### 📊 **交易绩效跟踪**
+```json
+{
+  "win_rate": 0.72,
+  "average_return": 0.15,
+  "sharpe_ratio": 1.85,
+  "max_drawdown": -0.08,
+  "total_trades": 1250,
+  "profitable_trades": 900
+}
+```
 
 ---
 
 ## 🆘 **故障排除**
 
 ### ❌ **常见错误**
-- **模型验证失败**: 检查是否尝试使用其他模型
-- **响应格式错误**: 确保API密钥正确配置
-- **时间戳格式异常**: 重新加载验证器
-- **Linear集成失败**: 检查API密钥配置
+1. **API密钥无效**: 检查机构访问权限
+2. **延迟过高**: 确认网络连接和服务器负载
+3. **格式错误**: 验证JSON结构和必需字段
+4. **风险限制**: 检查仓位和敞口限制
 
-### ✅ **解决方案**
-1. 确保使用正确的API端点
-2. 验证Bearer Token格式
-3. 检查网络连接状态
-4. 重新初始化验证器
-
----
-
-## 📞 **技术支持**
-
-- **邮箱**: support@aiylt.github.io
-- **文档**: https://aiylt.github.io/.well-known/legal.html
-- **API规范**: https://aiylt.github.io/.well-known/openapi.yaml
+### 📞 **技术支持**
+- **邮箱**: trading@aiylt.github.io
+- **响应时间**: 交易时段内 < 1小时
+- **技术文档**: https://aiylt.github.io/.well-known/
+- **状态页面**: 实时系统状态监控
 
 ---
 
-**🚀 OpenAI o3-2025-04-16 强制模型验证器 - 确保最强推理能力，提供最高质量保证**
+## ⚖️ **免责声明**
 
-*最后更新: 2025年1月11日* 
+本系统提供的交易分析和建议仅供参考，不构成投资建议。交易有风险，投资需谨慎。过往表现不代表未来收益。请在专业财务顾问指导下做出投资决策。
+
+**⚠️ 重要提醒**: 日内交易具有高风险特性，可能导致重大损失。请确保您具备相应的风险承受能力和专业知识。 
