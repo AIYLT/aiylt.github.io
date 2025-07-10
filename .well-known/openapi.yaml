@@ -9,10 +9,10 @@ info:
     仅使用 OpenAI 官方端点，确保与 ChatGPT Actions 完全兼容。
     
     **🎯 股票分析优化**:
-    - Temperature: 0.1 (确定性分析)
     - Reasoning Effort: HIGH (深度推理)
     - Max Tokens: 4000 (详细分析)
     - Stream: false (避免验证问题)
+    - Temperature: 不可修改 (o3 模型限制)
     
     **📊 核心能力**:
     - 实时股票价格分析
@@ -102,10 +102,9 @@ components:
           type: number
           minimum: 0
           maximum: 2
-          default: 0.1
           description: |
             What sampling temperature to use, between 0 and 2.
-            Stock analysis default: 0.1 for deterministic analysis
+            Note: o3 models do not support temperature modification
         
         top_p:
           type: number
