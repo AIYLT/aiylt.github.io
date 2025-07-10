@@ -1,156 +1,17 @@
 {
   "schema_version": "v1",
-  "name_for_human": "📈 Institutional Day Trading AI - o3-2025-04-16",
-  "name_for_model": "institutional_day_trading_ai_o3",
-  "description_for_human": "🚀 专业机构级日内交易AI系统，基于OpenAI o3-2025-04-16模型。提供实时股票分析、技术指标计算、风险管理、交易信号生成等功能。专为高频交易、算法交易和投资组合管理设计，确保超低延迟响应和高精度交易决策。",
-  "description_for_model": "Advanced institutional-grade day trading AI system powered by OpenAI o3-2025-04-16. CRITICAL SPECIFICATIONS: reasoning_effort=HIGH, temperature=0.1, stream=true, response_format=json_schema. Specialized for real-time stock market analysis, technical indicators, risk assessment, portfolio optimization, and high-frequency trading signals. Features: ultra-low latency responses, deterministic trading decisions, structured output formats, multi-asset analysis, real-time news impact assessment, and institutional-grade risk management. Supports technical analysis (TA), fundamental analysis (FA), quantitative analysis (QA), sentiment analysis (SA), and advanced risk management (RM). All responses must include trading signals with confidence scores, risk levels, price targets, and stop-loss recommendations.",
+  "name_for_human": "OpenAI o3-2025-04-16 Stock Analysis",
+  "name_for_model": "openai_o3_stock_analysis",
+  "description_for_human": "🚀 基于 OpenAI o3-2025-04-16 的股票分析AI。专为股票市场分析优化参数配置（低温度、高推理、实时流输出），提供确定性的技术分析、风险评估和投资建议。支持图表分析、实时数据处理和结构化输出。",
+  "description_for_model": "Stock market analysis AI powered by OpenAI o3-2025-04-16 with optimized parameters for financial analysis. CRITICAL SETTINGS: reasoning_effort=high, temperature=0.1, stream=true, max_tokens=4000. Specializes in technical analysis, risk assessment, market sentiment analysis, and investment recommendations. Provides deterministic, structured outputs for stock trading decisions. Supports chart analysis via image inputs and real-time market data processing.",
   "auth": {
-    "type": "user_http",
-    "authorization_type": "bearer",
-    "verification_tokens": {
-      "openai": "institutional-trading-o3-2025"
-    }
+    "type": "bearer"
   },
   "api": {
     "type": "openapi",
-    "url": "https://aiylt.github.io/.well-known/openapi.yaml",
-    "is_user_authenticated": true
+    "url": "https://aiylt.github.io/.well-known/openapi.yaml"
   },
-  "logo_url": "https://aiylt.github.io/.well-known/trading-logo.png",
-  "contact_email": "trading@aiylt.github.io",
-  "legal_info_url": "https://aiylt.github.io/.well-known/trading-legal.html",
-  "httpx_requests_read_timeout": 30,
-  "httpx_requests_connect_timeout": 10,
-  "trading_optimization_timeout": 60,
-  "capabilities": {
-    "trading_model_enforcement": {
-      "locked_model": "o3-2025-04-16",
-      "trading_parameters": {
-        "reasoning_effort": "high",
-        "temperature": 0.1,
-        "top_p": 0.9,
-        "stream": true,
-        "response_format": "json_schema"
-      },
-      "required_trading_prefix": "📊 TRADING ANALYSIS:",
-      "deterministic_decisions": true
-    },
-    "model_specifications": {
-      "context_window": 200000,
-      "max_output_tokens": 100000,
-      "reasoning_tokens": true,
-      "knowledge_cutoff": "2024-05-31",
-      "trading_optimized": true,
-      "low_latency_mode": true
-    },
-    "trading_features": {
-      "real_time_analysis": true,
-      "technical_indicators": ["RSI", "MACD", "Bollinger Bands", "Moving Averages", "Volume Analysis"],
-      "risk_assessment": ["VaR", "Sharpe Ratio", "Beta", "Volatility", "Correlation"],
-      "market_sentiment": ["News Analysis", "Social Media", "Fear & Greed Index"],
-      "trading_signals": ["BUY", "SELL", "HOLD", "STRONG_BUY", "STRONG_SELL"],
-      "supported_assets": ["Stocks", "ETFs", "Options", "Futures", "Forex"],
-      "time_frames": ["1m", "5m", "15m", "30m", "1h", "4h", "1d"]
-    },
-    "tool_support": {
-      "technical_analysis": {
-        "enabled": true,
-        "priority": "high",
-        "description": "Advanced technical analysis with chart pattern recognition"
-      },
-      "risk_assessment": {
-        "enabled": true,
-        "priority": "critical",
-        "description": "Real-time risk metrics and portfolio exposure analysis"
-      },
-      "market_sentiment": {
-        "enabled": true,
-        "priority": "medium",
-        "description": "News and social sentiment impact on price movements"
-      },
-      "price_prediction": {
-        "enabled": true,
-        "priority": "high",
-        "description": "Short-term price forecasting for day trading"
-      },
-      "portfolio_optimization": {
-        "enabled": true,
-        "priority": "high",
-        "description": "Position sizing and portfolio allocation strategies"
-      },
-      "news_impact_analysis": {
-        "enabled": true,
-        "priority": "medium",
-        "description": "Real-time news event impact on market movements"
-      }
-    },
-    "input_modalities": {
-      "text": true,
-      "charts": true,
-      "market_data": true,
-      "news_feeds": true,
-      "financial_statements": true,
-      "supported_formats": {
-        "charts": ["candlestick", "line", "volume", "technical_overlays"],
-        "data": ["csv", "json", "real_time_feeds", "historical_data"]
-      }
-    },
-    "output_formats": {
-      "structured_signals": {
-        "format": "json_schema",
-        "required_fields": ["analysis_type", "confidence_score", "risk_level", "price_target", "stop_loss", "reasoning"],
-        "signal_types": ["BUY", "SELL", "HOLD", "STRONG_BUY", "STRONG_SELL"]
-      },
-      "risk_reports": {
-        "format": "json_schema",
-        "metrics": ["VaR", "portfolio_beta", "volatility", "correlation_matrix", "exposure_analysis"]
-      },
-      "performance_tracking": {
-        "latency_target": "< 500ms",
-        "accuracy_target": "> 85%",
-        "real_time_updates": true
-      }
-    },
-    "cache_control": {
-      "policy": "no-store, max-age=0",
-      "real_time_data": true,
-      "market_hours_optimization": true,
-      "pre_market_analysis": true,
-      "after_hours_monitoring": true
-    }
-  },
-  "security": {
-    "institutional_grade": true,
-    "api_key_rotation": true,
-    "audit_logging": true,
-    "compliance_monitoring": true,
-    "risk_limits": {
-      "max_position_size": "configurable",
-      "daily_loss_limit": "configurable",
-      "exposure_limits": "enforced"
-    }
-  },
-  "compliance": {
-    "regulatory_framework": ["SEC", "FINRA", "MiFID II"],
-    "data_protection": "institutional_standard",
-    "trading_permissions": "verified_institutional_access",
-    "audit_trail": "complete_transaction_history",
-    "risk_disclosure": "comprehensive_risk_warnings"
-  },
-  "performance_metrics": {
-    "target_latency": "< 500ms",
-    "accuracy_benchmark": "> 85%",
-    "uptime_requirement": "99.9%",
-    "throughput": "1000+ requests/minute",
-    "concurrent_users": "institutional_scale"
-  },
-  "version": "2.0.0",
-  "last_updated": "2025-01-11",
-  "build_timestamp": "2025-01-11T20:00:00Z",
-  "trading_session_info": {
-    "market_hours": "09:30-16:00 EST",
-    "pre_market": "04:00-09:30 EST", 
-    "after_hours": "16:00-20:00 EST",
-    "supported_exchanges": ["NYSE", "NASDAQ", "CBOE", "CME", "ICE"]
-  }
+  "logo_url": "https://openai.com/favicon.ico",
+  "contact_email": "support@openai.com",
+  "legal_info_url": "https://openai.com/policies"
 } 
