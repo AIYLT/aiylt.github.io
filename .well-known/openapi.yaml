@@ -6,6 +6,7 @@ info:
     **Official OpenAI o3-2025-04-16 Chat Completions API**
     
     专为股票分析优化的参数配置，基于官方 OpenAI API 规范。
+    仅使用 OpenAI 官方端点，确保与 ChatGPT Actions 完全兼容。
     
     **🎯 股票分析优化**:
     - Temperature: 0.1 (确定性分析)
@@ -28,8 +29,6 @@ info:
 servers:
   - url: https://api.openai.com/v1
     description: OpenAI Official API
-  - url: https://openrouter.ai/api/v1
-    description: OpenRouter API (BYOK Required)
 
 paths:
   /chat/completions:
