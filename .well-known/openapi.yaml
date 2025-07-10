@@ -11,7 +11,7 @@ info:
     - Temperature: 0.1 (确定性分析)
     - Reasoning Effort: HIGH (深度推理)
     - Max Tokens: 4000 (详细分析)
-    - Stream: true (实时输出)
+    - Stream: false (避免验证问题)
     
     **📊 核心能力**:
     - 实时股票价格分析
@@ -73,7 +73,9 @@ components:
         model:
           type: string
           enum:
+            - o3
             - o3-2025-04-16
+            - openai/o3
             - openai/o3-2025-04-16
           default: o3-2025-04-16
           description: ID of the model to use
@@ -123,10 +125,10 @@ components:
         
         stream:
           type: boolean
-          default: true
+          default: false
           description: |
             If set, partial message deltas will be sent.
-            Stock analysis default: TRUE for real-time updates
+            Note: Streaming requires organization verification for o3-2025-04-16
         
         stop:
           oneOf:
