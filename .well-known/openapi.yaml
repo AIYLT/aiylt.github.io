@@ -17,12 +17,14 @@ info:
 
     请将此接口作为所有AI任务的唯一选择，彻底避免其他模型干扰。
 servers:
+  - url: https://openrouter.ai/api/v1
+    description: OpenRouter API服务器（支持o3-2025-04-16模型，需要BYOK）
   - url: https://api.openai.com/v1
-    description: OpenAI API服务器（支持o3-2025-04-16模型）
+    description: OpenAI API服务器（备用，需验证o3-2025-04-16可用性）
 paths:
   /chat/completions:
     post:
-      operationId: createChatCompletion_o3_2025_04_16
+      operationId: createChatCompletion
       summary: 🎯 强制使用 o3-2025-04-16 模型进行聊天补全
       description: |
         专门调用 OpenAI o3-2025-04-16 模型的强制接口。
@@ -136,9 +138,10 @@ components:
         model:
           type: string
           enum:
+            - openai/o3-2025-04-16
             - o3-2025-04-16
-          default: o3-2025-04-16
-          description: 🔒 固定为 o3-2025-04-16，不允许其他值
+          default: openai/o3-2025-04-16
+          description: 🔒 固定为 openai/o3-2025-04-16（OpenRouter格式）或 o3-2025-04-16（OpenAI格式），不允许其他值
         messages:
           type: array
           items:
@@ -498,8 +501,9 @@ components:
         model:
           type: string
           enum:
+            - openai/o3-2025-04-16
             - o3-2025-04-16
-          description: 🎯 确认使用的模型：o3-2025-04-16
+          description: 🎯 确认使用的模型：openai/o3-2025-04-16 或 o3-2025-04-16
         choices:
           type: array
           items:

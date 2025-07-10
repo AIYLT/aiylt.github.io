@@ -121,11 +121,13 @@
 
 ### 🔧 **基础调用**
 ```bash
-curl -X POST https://api.openai.com/v1/chat/completions \
-  -H "Authorization: Bearer YOUR_API_KEY" \
+curl -X POST https://openrouter.ai/api/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_OPENROUTER_API_KEY" \
   -H "Content-Type: application/json" \
+  -H "HTTP-Referer: https://aiylt.github.io" \
+  -H "X-Title: o3-2025-04-16 强制模型验证器" \
   -d '{
-    "model": "o3-2025-04-16",
+    "model": "openai/o3-2025-04-16",
     "messages": [
       {
         "role": "user",
@@ -224,8 +226,14 @@ data: [DONE]
 
 ## ⚠️ **重要注意事项**
 
+### 🚨 **访问要求**
+1. **BYOK需要**: o3-2025-04-16模型需要自己的OpenAI API密钥
+2. **账户等级**: 需要OpenAI API使用等级3-5或OpenRouter账户
+3. **访问限制**: 受到严格的速率限制和token限制约束
+4. **成本较高**: 比标准模型贵3-5倍
+
 ### 🔴 **强制要求**
-1. **模型锁定**: 只能使用 o3-2025-04-16 模型
+1. **模型锁定**: 只能使用 openai/o3-2025-04-16 或 o3-2025-04-16 模型
 2. **响应开头**: 必须包含模型声明
 3. **参数固定**: temperature=0, top_p=0.5 不可变更
 4. **验证通过**: 所有响应必须通过验证链
