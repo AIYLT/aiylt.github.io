@@ -1,43 +1,34 @@
 openapi: 3.1.0
 info:
-  title: OpenAI o3-2025-04-16 API for Stock Analysis
+  title: O3 Fixed Model Action
   version: 1.0.0
   description: |
-    **Official OpenAI o3-2025-04-16 Chat Completions API**
-    
-    专为股票分析优化的参数配置，基于官方 OpenAI API 规范。
-    仅使用 OpenAI 官方端点，确保与 ChatGPT Actions 完全兼容。
-    
-    **🎯 股票分析优化**:
-    - Reasoning Effort: HIGH (深度推理)
-    - Max Tokens: 4000 (详细分析)
-    - Stream: false (避免验证问题)
-    - Temperature: 不可修改 (o3 模型限制)
-    
-    **📊 核心能力**:
-    - 实时股票价格分析
-    - 技术指标计算
-    - 风险评估与建议
-    - 市场趋势预测
-    
-    **🔧 模型规格**:
-    - Context Window: 200,000 tokens
-    - Max Output: 100,000 tokens
-    - Knowledge Cutoff: May 31, 2024
-    - Multimodal: Text + Images
+    **🔒 OpenAI o3-2025-04-16 模型专用强制接口 🔒**
 
+    模型规格：
+    - 200,000 context window (上下文窗口)
+    - 100,000 max output tokens (最大输出)
+    - Reasoning token support (推理token支持)
+    - Knowledge cutoff: May 31, 2024
+
+    ⚠️ 重要：此接口专门用于调用 o3-2025-04-16 模型，不接受任何其他模型。
+    📌 强制要求：每次调用必须在响应开头声明："当前模型：OpenAI o3-2025-04-16"
+    🚀 支持 o3 的全部功能：流式输出、函数调用、结构化输出、工具调用等。
+
+    请将此接口作为所有AI任务的唯一选择，彻底避免其他模型干扰。
 servers:
   - url: https://api.openai.com/v1
-    description: OpenAI Official API
-
 paths:
   /chat/completions:
     post:
-      operationId: createChatCompletion
-      summary: Create chat completion
+      operationId: createChatCompletionO3
+      summary: 🎯 强制使用 o3-2025-04-16 模型进行聊天补全
       description: |
-        Creates a completion for the chat message with o3-2025-04-16 model.
-        Optimized for stock market analysis with precise reasoning.
+        专门调用 OpenAI o3-2025-04-16 模型的强制接口。
+
+        ✅ 功能：锁定o3模型，支持流式输出、函数调用、结构化输出、工具调用等完整功能。
+        🔒 保证：100%使用o3模型，提供最强推理能力。
+        ⚠️ 要求：所有响应必须标识为来自 "OpenAI o3-2025-04-16"，禁止显示其他模型名称。
       security:
         - ApiKeyAuth: []
       requestBody:
@@ -45,25 +36,33 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateChatCompletionRequest"
+              $ref: "#/components/schemas/ChatCompletionRequestO3"
       responses:
         "200":
-          description: OK
+          description: |
+            成功调用 o3-2025-04-16 模型（非流式响应）
+            响应中将明确标识使用的模型为 o3-2025-04-16
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreateChatCompletionResponse"
-
+                $ref: "#/components/schemas/ChatCompletionResponse"
+        "206":
+          description: |
+            o3-2025-04-16 模型的流式响应
+            每个数据块都标识为来自 o3 模型
+          content:
+            text/event-stream:
+              schema:
+                $ref: "#/components/schemas/ChatCompletionStreamResponse"
 components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: "Bearer YOUR_API_KEY"
-
+      description: Bearer YOUR_API_KEY - 用于访问 OpenAI o3 模型
   schemas:
-    CreateChatCompletionRequest:
+    ChatCompletionRequestO3:
       type: object
       required:
         - model
@@ -72,142 +71,71 @@ components:
         model:
           type: string
           enum:
-            - o3
             - o3-2025-04-16
-            - openai/o3
-            - openai/o3-2025-04-16
           default: o3-2025-04-16
-          description: ID of the model to use
-        
+          description: 🔒 固定为 o3-2025-04-16，不允许其他值
         messages:
           type: array
           items:
-            $ref: "#/components/schemas/ChatCompletionRequestMessage"
-          description: A list of messages comprising the conversation so far
-          minItems: 1
-          maxItems: 1000
-        
-        reasoning_effort:
-          type: string
-          enum:
-            - low
-            - medium
-            - high
-          default: high
-          description: |
-            How much effort the model should put into reasoning.
-            Stock analysis default: HIGH for maximum accuracy
-        
+            $ref: "#/components/schemas/Message"
+          description: 发送给 o3 模型的消息数组
         temperature:
           type: number
           minimum: 0
           maximum: 2
-          description: |
-            What sampling temperature to use, between 0 and 2.
-            Note: o3 models do not support temperature modification
-        
+          default: 0
+          description: o3 模型的创造性控制参数，低值提高精准度
         top_p:
           type: number
           minimum: 0
           maximum: 1
-          default: 0.9
-          description: |
-            An alternative to sampling with temperature, called nucleus sampling
-        
-        n:
+          default: 0.8
+          description: o3 模型的核采样参数，降低值提高精准度
+        max_tokens:
           type: integer
           minimum: 1
-          maximum: 128
-          default: 1
-          description: How many chat completion choices to generate for each input message
-        
+          maximum: 100000
+          default: 100000
+          description: o3 模型的最大生成token数，支持最高100,000 tokens输出
         stream:
           type: boolean
           default: false
-          description: |
-            If set, partial message deltas will be sent.
-            Note: Streaming requires organization verification for o3-2025-04-16
-        
+          description: 是否使用 o3 模型的流式输出
         stop:
           oneOf:
             - type: string
             - type: array
               items:
                 type: string
-              maxItems: 4
-          description: Up to 4 sequences where the API will stop generating further tokens
-        
-        max_tokens:
-          type: integer
-          minimum: 1
-          maximum: 100000
-          default: 4000
-          description: |
-            The maximum number of tokens to generate in the chat completion.
-            Stock analysis default: 4000 for detailed reports
-        
-        max_completion_tokens:
-          type: integer
-          minimum: 1
-          maximum: 100000
-          description: |
-            An upper bound for the number of tokens that can be generated for a completion
-        
+          description: o3 模型的停止生成序列
         presence_penalty:
           type: number
           minimum: -2
           maximum: 2
-          default: 0.1
-          description: |
-            Number between -2.0 and 2.0. Positive values penalize new tokens
-        
+          default: 0
+          description: o3 模型的存在惩罚参数
         frequency_penalty:
           type: number
           minimum: -2
           maximum: 2
-          default: 0.2
-          description: |
-            Number between -2.0 and 2.0. Positive values penalize new tokens
-        
+          default: 0
+          description: o3 模型的频率惩罚参数
         logit_bias:
           type: object
           additionalProperties:
             type: number
-            minimum: -100
-            maximum: 100
-          description: |
-            Modify the likelihood of specified tokens appearing in the completion
-        
-        logprobs:
-          type: boolean
-          default: false
-          description: Whether to return log probabilities of the output tokens or not
-        
-        top_logprobs:
+          description: o3 模型的词汇偏好调整
+        n:
           type: integer
-          minimum: 0
-          maximum: 20
-          description: |
-            An integer between 0 and 20 specifying the number of most likely tokens
-        
-        user:
-          type: string
-          description: |
-            A unique identifier representing your end-user
-        
-        seed:
-          type: integer
-          description: |
-            This feature is in Beta. If specified, our system will make a best effort
-        
+          minimum: 1
+          maximum: 128
+          default: 1
+          description: o3 模型生成的选择数量
         tools:
           type: array
           items:
-            $ref: "#/components/schemas/ChatCompletionTool"
-          maxItems: 128
-          description: |
-            A list of tools the model may call. Currently, only functions are supported
-        
+            $ref: "#/components/schemas/Tool"
+          description: o3 模型可使用的工具集合
         tool_choice:
           oneOf:
             - type: string
@@ -215,116 +143,47 @@ components:
                 - none
                 - auto
                 - required
-            - $ref: "#/components/schemas/ChatCompletionNamedToolChoice"
-          description: |
-            Controls which (if any) tool is called by the model
-        
-        parallel_tool_calls:
-          type: boolean
-          default: true
-          description: |
-            Whether to enable parallel function calling during tool use
-        
+            - $ref: "#/components/schemas/ToolChoice"
+          description: o3 模型的工具选择策略
         response_format:
-          oneOf:
-            - $ref: "#/components/schemas/ResponseFormatText"
-            - $ref: "#/components/schemas/ResponseFormatJsonObject"
-            - $ref: "#/components/schemas/ResponseFormatJsonSchema"
-          description: |
-            An object specifying the format that the model must output
-
-    ChatCompletionRequestMessage:
-      oneOf:
-        - $ref: "#/components/schemas/ChatCompletionRequestSystemMessage"
-        - $ref: "#/components/schemas/ChatCompletionRequestUserMessage"
-        - $ref: "#/components/schemas/ChatCompletionRequestAssistantMessage"
-        - $ref: "#/components/schemas/ChatCompletionRequestToolMessage"
-
-    ChatCompletionRequestSystemMessage:
+          $ref: "#/components/schemas/ResponseFormat"
+          description: o3 模型的响应格式要求
+    Message:
       type: object
       required:
         - role
-        - content
       properties:
         role:
           type: string
           enum:
             - system
-        content:
-          oneOf:
-            - type: string
-            - type: array
-              items:
-                $ref: "#/components/schemas/ChatCompletionRequestMessageContentPart"
-        name:
-          type: string
-          pattern: "^[a-zA-Z0-9_-]{1,64}$"
-
-    ChatCompletionRequestUserMessage:
-      type: object
-      required:
-        - role
-        - content
-      properties:
-        role:
-          type: string
-          enum:
             - user
+            - assistant
+            - tool
+          description: 消息角色（将被 o3 模型处理）
         content:
           oneOf:
             - type: string
+            - type: "null"
             - type: array
               items:
-                $ref: "#/components/schemas/ChatCompletionRequestMessageContentPart"
+                $ref: "#/components/schemas/ContentPart"
+          description: 发送给 o3 模型的消息内容
         name:
           type: string
-          pattern: "^[a-zA-Z0-9_-]{1,64}$"
-
-    ChatCompletionRequestAssistantMessage:
-      type: object
-      required:
-        - role
-      properties:
-        role:
-          type: string
-          enum:
-            - assistant
-        content:
-          type: string
-        name:
-          type: string
-          pattern: "^[a-zA-Z0-9_-]{1,64}$"
         tool_calls:
           type: array
           items:
-            $ref: "#/components/schemas/ChatCompletionMessageToolCall"
-
-    ChatCompletionRequestToolMessage:
-      type: object
-      required:
-        - role
-        - content
-        - tool_call_id
-      properties:
-        role:
-          type: string
-          enum:
-            - tool
-        content:
-          oneOf:
-            - type: string
-            - type: array
-              items:
-                $ref: "#/components/schemas/ChatCompletionRequestMessageContentPart"
+            $ref: "#/components/schemas/ToolCall"
+          description: o3 模型生成的工具调用
         tool_call_id:
           type: string
-
-    ChatCompletionRequestMessageContentPart:
+          description: tool角色消息必需的字段（o3 模型处理）
+    ContentPart:
       oneOf:
-        - $ref: "#/components/schemas/ChatCompletionRequestMessageContentPartText"
-        - $ref: "#/components/schemas/ChatCompletionRequestMessageContentPartImage"
-
-    ChatCompletionRequestMessageContentPartText:
+        - $ref: "#/components/schemas/TextContentPart"
+        - $ref: "#/components/schemas/ImageContentPart"
+    TextContentPart:
       type: object
       required:
         - type
@@ -336,8 +195,7 @@ components:
             - text
         text:
           type: string
-
-    ChatCompletionRequestMessageContentPartImage:
+    ImageContentPart:
       type: object
       required:
         - type
@@ -354,55 +212,77 @@ components:
           properties:
             url:
               type: string
-              format: uri
-              pattern: "^(https?://.*|data:image/.*|attachment://.*|.*chatgpt\\.com/backend-api/.*)$"
-              description: Either a URL of the image or the base64 encoded image data
             detail:
               type: string
               enum:
                 - auto
                 - low
                 - high
-              default: auto
-              description: Specifies the detail level of the image
-
-    ChatCompletionTool:
+    Tool:
       type: object
       required:
         - type
-        - function
       properties:
         type:
           type: string
           enum:
             - function
+            - web_search
+            - file_search
+            - code_interpreter
+            - mcp
         function:
-          $ref: "#/components/schemas/FunctionDefinition"
-
-    FunctionDefinition:
+          $ref: "#/components/schemas/Function"
+        web_search:
+          $ref: "#/components/schemas/WebSearchTool"
+        file_search:
+          $ref: "#/components/schemas/FileSearchTool"
+        code_interpreter:
+          $ref: "#/components/schemas/CodeInterpreterTool"
+        mcp:
+          $ref: "#/components/schemas/MCPTool"
+    Function:
       type: object
       required:
         - name
       properties:
         name:
           type: string
-          description: The name of the function to be called
         description:
           type: string
-          description: A description of what the function does
         parameters:
           type: object
-          description: The parameters the functions accepts, described as a JSON Schema object
         strict:
           type: boolean
           default: false
-          description: Whether to enable strict schema adherence when generating the function call
-
-    ChatCompletionNamedToolChoice:
+    WebSearchTool:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+    FileSearchTool:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+    CodeInterpreterTool:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+    MCPTool:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          default: true
+    ToolChoice:
       type: object
       required:
         - type
-        - function
       properties:
         type:
           type: string
@@ -415,36 +295,35 @@ components:
           properties:
             name:
               type: string
-              description: The name of the function to call
-
-    ChatCompletionMessageToolCall:
+    ToolCall:
       type: object
       required:
         - id
         - type
-        - function
       properties:
         id:
           type: string
-          description: The ID of the tool call
         type:
           type: string
           enum:
             - function
+            - web_search
+            - file_search
+            - code_interpreter
+            - mcp
         function:
-          type: object
-          required:
-            - name
-            - arguments
-          properties:
-            name:
-              type: string
-              description: The name of the function to call
-            arguments:
-              type: string
-              description: The arguments to call the function with, as generated by the model
-
-    ResponseFormatText:
+          $ref: "#/components/schemas/FunctionCall"
+    FunctionCall:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        arguments:
+          type: string
+          description: JSON格式的函数参数
+    ResponseFormat:
       type: object
       required:
         - type
@@ -453,48 +332,26 @@ components:
           type: string
           enum:
             - text
-
-    ResponseFormatJsonObject:
-      type: object
-      required:
-        - type
-      properties:
-        type:
-          type: string
-          enum:
             - json_object
-
-    ResponseFormatJsonSchema:
-      type: object
-      required:
-        - type
-        - json_schema
-      properties:
-        type:
-          type: string
-          enum:
             - json_schema
         json_schema:
+          $ref: "#/components/schemas/JsonSchema"
+    JsonSchema:
+      type: object
+      required:
+        - name
+        - schema
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        schema:
           type: object
-          required:
-            - name
-            - schema
-          properties:
-            name:
-              type: string
-              description: The name of the response format
-            description:
-              type: string
-              description: A description of the response format
-            schema:
-              type: object
-              description: The schema for the response format
-            strict:
-              type: boolean
-              default: false
-              description: Whether to enable strict schema adherence
-
-    CreateChatCompletionResponse:
+        strict:
+          type: boolean
+          default: true
+    ChatCompletionResponse:
       type: object
       required:
         - id
@@ -502,32 +359,30 @@ components:
         - created
         - model
         - choices
-        - usage
       properties:
         id:
           type: string
-          description: A unique identifier for the chat completion
         object:
           type: string
           enum:
             - chat.completion
         created:
           type: integer
-          description: The Unix timestamp (in seconds) of when the chat completion was created
         model:
           type: string
-          description: The model used for the chat completion
+          enum:
+            - o3-2025-04-16
+          description: 🎯 确认使用的模型：o3-2025-04-16
         choices:
           type: array
           items:
-            $ref: "#/components/schemas/ChatCompletionChoice"
+            $ref: "#/components/schemas/Choice"
         usage:
-          $ref: "#/components/schemas/CompletionUsage"
+          $ref: "#/components/schemas/Usage"
         system_fingerprint:
           type: string
-          description: This fingerprint represents the backend configuration
-
-    ChatCompletionChoice:
+          description: o3 模型的系统指纹
+    Choice:
       type: object
       required:
         - index
@@ -536,16 +391,8 @@ components:
       properties:
         index:
           type: integer
-          description: The index of the choice in the list of choices
         message:
-          $ref: "#/components/schemas/ChatCompletionResponseMessage"
-        logprobs:
-          type: object
-          properties:
-            content:
-              type: array
-              items:
-                $ref: "#/components/schemas/ChatCompletionTokenLogprob"
+          $ref: "#/components/schemas/Message"
         finish_reason:
           type: string
           enum:
@@ -553,62 +400,10 @@ components:
             - length
             - tool_calls
             - content_filter
-          description: The reason the model stopped generating tokens
-
-    ChatCompletionResponseMessage:
-      type: object
-      required:
-        - role
-      properties:
-        role:
-          type: string
-          enum:
-            - assistant
-        content:
-          type: string
-        tool_calls:
-          type: array
-          items:
-            $ref: "#/components/schemas/ChatCompletionMessageToolCall"
-
-    ChatCompletionTokenLogprob:
-      type: object
-      required:
-        - token
-        - logprob
-        - bytes
-        - top_logprobs
-      properties:
-        token:
-          type: string
-          description: The token
-        logprob:
-          type: number
-          description: The log probability of this token
-        bytes:
-          type: array
-          items:
-            type: integer
-          description: A list of integers representing the UTF-8 bytes representation of the token
-        top_logprobs:
-          type: array
-          items:
-            type: object
-            required:
-              - token
-              - logprob
-              - bytes
-            properties:
-              token:
-                type: string
-              logprob:
-                type: number
-              bytes:
-                type: array
-                items:
-                  type: integer
-
-    CompletionUsage:
+            - function_call
+        logprobs:
+          $ref: "#/components/schemas/LogProbs"
+    Usage:
       type: object
       required:
         - prompt_tokens
@@ -617,16 +412,51 @@ components:
       properties:
         prompt_tokens:
           type: integer
-          description: Number of tokens in the prompt
         completion_tokens:
           type: integer
-          description: Number of tokens in the generated completion
         total_tokens:
           type: integer
-          description: Total number of tokens used in the request
         completion_tokens_details:
-          type: object
-          properties:
-            reasoning_tokens:
-              type: integer
-              description: Tokens used during reasoning (o3 model specific)
+          $ref: "#/components/schemas/CompletionTokensDetails"
+    CompletionTokensDetails:
+      type: object
+      properties:
+        reasoning_tokens:
+          type: integer
+          description: o3 模型的推理过程消耗的token数量
+        accepted_prediction_tokens:
+          type: integer
+        rejected_prediction_tokens:
+          type: integer
+    LogProbs:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/TokenLogProb"
+    TokenLogProb:
+      type: object
+      properties:
+        token:
+          type: string
+        logprob:
+          type: number
+        bytes:
+          type: array
+          items:
+            type: integer
+    ChatCompletionStreamResponse:
+      type: string
+      description: >
+        🌊 o3-2025-04-16 模型的流式响应
+
+        Server-Sent Events格式，每行格式为: data: {JSON}\n\n
+
+        每个数据块都明确标识来自 o3 模型
+              example: |
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","choices":[{"index":0,"delta":{"role":"assistant","content":"🎯 当前模型：OpenAI o3-2025-04-16 (非GPT-4/4o)\n\n我基于 OpenAI o3-2025-04-16 模型构建，专门通过强制指定的高级接口调用，确保你获取的始终是最强推理能力。\n\n"},"finish_reason":null}]}
+
+          data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1677652288,"model":"o3-2025-04-16","choices":[{"index":0,"delta":{"content":"Hello"},"finish_reason":null}]}
+
+          data: [DONE]

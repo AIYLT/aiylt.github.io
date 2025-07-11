@@ -1,38 +1,37 @@
-# OpenAI o3-2025-04-16 API for Stock Analysis
+# O3 Fixed Model Action
 
 ## 🎯 **系统概述**
 
-基于官方 OpenAI o3-2025-04-16 Chat Completions API 的标准实现，专为股票市场分析优化了默认参数配置。
+**🔒 OpenAI o3-2025-04-16 模型专用强制接口 🔒**
+
+基于 ChatGPT Actions 架构的 o3-2025-04-16 模型专用调用接口，确保100%使用最强推理能力的 o3 模型。
 
 **版本**: 1.0.0  
-**API 规范**: OpenAI Chat Completions API (官方标准)  
-**模型**: o3-2025-04-16  
-**优化领域**: 股票分析与投资决策
+**架构**: ChatGPT Actions (直接API调用)  
+**模型**: o3-2025-04-16 (强制锁定)  
+**特色**: 模型强制选择，避免其他模型干扰
 
 ---
 
-## 📊 **股票分析优化配置**
+## 📊 **o3-2025-04-16 模型规格**
 
-### 🔧 **默认参数设置**
+### 🔧 **核心特性**
 
 ```yaml
-# 股票分析专用优化参数
-reasoning_effort: high          # 深度推理确保分析准确性
-temperature: 0.1               # 极低温度保证确定性输出
-max_tokens: 4000              # 详细分析报告长度
-stream: true                  # 实时输出交易信号
-top_p: 0.9                   # 平衡精确性与灵活性
-presence_penalty: 0.1         # 鼓励多维度分析
-frequency_penalty: 0.2        # 避免重复分析模式
+# o3-2025-04-16 专属特性
+context_window: 200000        # 200K 上下文窗口
+max_output_tokens: 100000     # 100K 最大输出
+reasoning_tokens: true        # 推理token支持
+knowledge_cutoff: 2024-05-31  # 知识截止时间
+model_lock: o3-2025-04-16     # 强制模型锁定
 ```
 
-### 📈 **核心分析能力**
+### 🧠 **推理能力**
 
-- **技术分析**: RSI、MACD、布林带、移动平均线、成交量分析
-- **基本面分析**: 财务指标、估值模型、行业对比
-- **风险评估**: VaR、夏普比率、Beta系数、波动率分析
-- **市场情绪**: 新闻影响分析、投资者情绪指标
-- **价格预测**: 多时间框架趋势分析
+- **高级推理**：支持复杂逻辑推理和问题解决
+- **推理token**：透明显示推理过程消耗的token
+- **模型确认**：每次响应明确标识使用o3-2025-04-16
+- **避免干扰**：彻底避免其他模型混入
 
 ---
 
@@ -49,21 +48,20 @@ curl -X POST "https://api.openai.com/v1/chat/completions" \
     "messages": [
       {
         "role": "system",
-        "content": "你是一个专业的股票分析师，基于技术和基本面分析为投资者提供准确的投资建议。"
+        "content": "你是基于OpenAI o3-2025-04-16模型的AI助手，具备最强推理能力。"
       },
       {
-        "role": "user", 
-        "content": "请分析 AAPL 股票的当前投资价值"
+        "role": "user",
+        "content": "请解决这个复杂问题并展示你的推理过程"
       }
     ],
-    "reasoning_effort": "high",
-    "temperature": 0.1,
-    "max_tokens": 4000,
-    "stream": true
+    "temperature": 0,
+    "max_tokens": 100000,
+    "stream": false
   }'
 ```
 
-### **图表分析示例**
+### **流式输出示例**
 
 ```bash
 curl -X POST "https://api.openai.com/v1/chat/completions" \
@@ -74,94 +72,120 @@ curl -X POST "https://api.openai.com/v1/chat/completions" \
     "messages": [
       {
         "role": "user",
-        "content": [
-          {
-            "type": "text",
-            "text": "请分析这张股票K线图的技术形态"
-          },
-          {
-            "type": "image_url",
-            "image_url": {
-              "url": "https://example.com/stock-chart.png",
-              "detail": "high"
-            }
-          }
-        ]
+        "content": "进行复杂分析并实时输出结果"
       }
     ],
-    "reasoning_effort": "high",
-    "temperature": 0.1
+    "stream": true,
+    "max_tokens": 50000
+  }'
+```
+
+### **工具调用示例**
+
+```bash
+curl -X POST "https://api.openai.com/v1/chat/completions" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "o3-2025-04-16",
+    "messages": [
+      {
+        "role": "user",
+        "content": "帮我搜索最新的AI发展趋势"
+      }
+    ],
+    "tools": [
+      {
+        "type": "web_search",
+        "web_search": {"enabled": true}
+      }
+    ],
+    "tool_choice": "auto"
   }'
 ```
 
 ---
 
-## 🛠️ **函数工具支持**
+## 🛠️ **支持的工具类型**
 
-### **技术分析工具**
+### **内置工具**
 
 ```json
 {
-  "type": "function",
-  "function": {
-    "name": "technical_analysis",
-    "description": "计算技术指标并提供买卖信号",
-    "parameters": {
-      "type": "object",
-      "properties": {
-        "symbol": {"type": "string", "description": "股票代码"},
-        "indicators": {"type": "array", "items": {"type": "string"}},
-        "timeframe": {"type": "string", "description": "时间周期"}
-      }
+  "tools": [
+    {
+      "type": "web_search",
+      "web_search": {"enabled": true}
+    },
+    {
+      "type": "file_search", 
+      "file_search": {"enabled": true}
+    },
+    {
+      "type": "code_interpreter",
+      "code_interpreter": {"enabled": true}
+    },
+    {
+      "type": "mcp",
+      "mcp": {"enabled": true}
     }
-  }
+  ]
 }
 ```
 
-### **风险评估工具**
+### **自定义函数**
 
 ```json
 {
-  "type": "function", 
-  "function": {
-    "name": "risk_assessment",
-    "description": "评估投资风险和资金管理",
-    "parameters": {
-      "type": "object",
-      "properties": {
-        "portfolio": {"type": "object", "description": "投资组合"},
-        "risk_tolerance": {"type": "string", "description": "风险承受能力"}
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "complex_analysis",
+        "description": "执行复杂数据分析",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "data": {"type": "string", "description": "输入数据"},
+            "analysis_type": {"type": "string", "description": "分析类型"}
+          },
+          "required": ["data"]
+        },
+        "strict": false
       }
     }
-  }
+  ]
 }
 ```
 
 ---
 
-## 📋 **结构化输出格式**
+## 📋 **模型强制配置**
 
-### **交易信号格式**
+### **模型锁定参数**
 
 ```json
 {
-  "type": "json_schema",
-  "json_schema": {
-    "name": "trading_signal",
-    "schema": {
-      "type": "object",
-      "properties": {
-        "symbol": {"type": "string"},
-        "signal": {"type": "string", "enum": ["BUY", "SELL", "HOLD"]},
-        "confidence": {"type": "number", "minimum": 0, "maximum": 100},
-        "price_target": {"type": "number"},
-        "stop_loss": {"type": "number"},
-        "risk_level": {"type": "string", "enum": ["LOW", "MEDIUM", "HIGH"]},
-        "reasoning": {"type": "string"}
-      },
-      "required": ["symbol", "signal", "confidence", "reasoning"]
+  "model": "o3-2025-04-16",    // 🔒 强制锁定，不接受其他值
+  "temperature": 0,            // 推荐：精确推理
+  "top_p": 0.8,               // 推荐：平衡创造性
+  "max_tokens": 100000,       // 最大：100K输出
+  "n": 1                      // 单一选择确保一致性
+}
+```
+
+### **响应格式要求**
+
+每个响应都将明确标识：
+```json
+{
+  "model": "o3-2025-04-16",
+  "choices": [{
+    "message": {
+      "content": "🎯 当前模型：OpenAI o3-2025-04-16...",
+      "role": "assistant"
     }
-  }
+  }]
 }
 ```
 
@@ -175,7 +199,7 @@ curl -X POST "https://api.openai.com/v1/chat/completions" \
 # 设置环境变量
 export OPENAI_API_KEY="sk-your-api-key"
 
-# 或在请求头中使用
+# 请求头格式
 Authorization: Bearer sk-your-api-key
 ```
 
@@ -183,64 +207,131 @@ Authorization: Bearer sk-your-api-key
 
 - 定期轮换 API 密钥
 - 使用 HTTPS 加密传输
-- 监控 API 使用量和异常访问
-- 遵循数据保护法规
+- 监控 API 使用量
+- 验证模型响应确认使用o3
 
 ---
 
-## 📊 **模型规格**
+## 📊 **Usage 统计详情**
 
-| 参数 | 规格 |
-|------|------|
-| **Context Window** | 200,000 tokens |
-| **Max Output** | 100,000 tokens |
-| **Knowledge Cutoff** | May 31, 2024 |
-| **Multimodal** | Text + Images |
-| **Reasoning** | 推理增强型 |
-| **Streaming** | 支持实时输出 |
+### **Token 使用情况**
 
----
+```json
+{
+  "usage": {
+    "prompt_tokens": 150,
+    "completion_tokens": 2500,
+    "total_tokens": 2650,
+    "completion_tokens_details": {
+      "reasoning_tokens": 800,        // o3推理过程消耗
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  }
+}
+```
 
-## 🌐 **API 端点**
+### **推理Token说明**
 
-- **主端点**: `https://api.openai.com/v1/chat/completions`
-- **备用端点**: `https://openrouter.ai/api/v1/chat/completions` (需要 BYOK)
-
----
-
-## ⚠️ **重要说明**
-
-1. **官方 API**: 这是标准 OpenAI Chat Completions API，完全符合官方规范
-2. **参数优化**: 仅在默认参数值上针对股票分析进行了优化
-3. **兼容性**: 与所有支持 OpenAI API 的工具和框架兼容
-4. **费用**: 按官方定价 - $10/M 输入 tokens, $40/M 输出 tokens
+- **reasoning_tokens**: o3模型推理过程的token消耗
+- **透明计费**: 推理token单独统计
+- **高质量输出**: 推理越多，回答质量越高
 
 ---
 
-## 📞 **技术支持**
+## 🎨 **高级功能**
 
-- **官方文档**: https://platform.openai.com/docs
-- **API 状态**: https://status.openai.com
-- **社区论坛**: https://community.openai.com
+### **结构化输出**
+
+```json
+{
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "analysis_result",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "conclusion": {"type": "string"},
+          "confidence": {"type": "number"},
+          "reasoning_steps": {"type": "array"}
+        },
+        "required": ["conclusion", "confidence"]
+      },
+      "strict": true
+    }
+  }
+}
+```
+
+### **多模态支持**
+
+```json
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "分析这张图片"
+        },
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "https://example.com/image.jpg",
+            "detail": "high"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
 
 ---
 
-## 📈 **最佳实践建议**
+## ⚠️ **重要特性**
 
-### **股票分析优化**
+### **模型确认机制**
 
-1. **使用高推理等级**: `reasoning_effort: "high"` 确保深度分析
-2. **保持低温度**: `temperature: 0.1` 获得确定性结果
-3. **启用流式输出**: `stream: true` 获得实时分析
-4. **合理设置长度**: `max_tokens: 4000` 平衡详细度与效率
+- ✅ **强制声明**: 每次响应开头声明"当前模型：OpenAI o3-2025-04-16"
+- ✅ **模型验证**: 禁止显示其他模型名称
+- ✅ **100%保证**: 确保使用o3-2025-04-16的最强推理能力
 
-### **查询优化**
+### **避免模型混淆**
 
-- 提供具体的股票代码和时间范围
-- 明确分析需求（技术面/基本面/风险评估）
-- 上传清晰的图表进行技术分析
-- 结合市场背景和新闻事件
+- 🚫 **拒绝其他模型**: 不接受gpt-4、gpt-4o等其他模型请求
+- 🔒 **锁定机制**: enum限制确保只能使用o3-2025-04-16
+- 🎯 **专用接口**: 彻底避免其他模型干扰
 
 ---
 
-**免责声明**: 本API提供的分析仅供参考，不构成投资建议。投资有风险，决策需谨慎。 
+## 📞 **支持信息**
+
+- **API文档**: https://platform.openai.com/docs
+- **模型信息**: o3-2025-04-16 官方规格
+- **状态监控**: https://status.openai.com
+- **社区支持**: https://community.openai.com
+
+---
+
+## 🔥 **最佳实践**
+
+### **优化推理质量**
+
+1. **使用低温度**: `temperature: 0` 获得最精确推理
+2. **充分上下文**: 利用200K上下文窗口提供详细信息
+3. **监控推理token**: 关注reasoning_tokens了解推理复杂度
+4. **验证模型标识**: 确认响应来自o3-2025-04-16
+
+### **高效使用建议**
+
+- 复杂问题使用最大token限制
+- 简单查询适当限制输出长度
+- 启用流式输出获得实时反馈
+- 使用工具增强模型能力
+
+---
+
+**🎯 确保获得最强AI推理能力，o3-2025-04-16专用接口为您服务！** 

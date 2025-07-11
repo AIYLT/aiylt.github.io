@@ -1,17 +1,18 @@
 {
   "schema_version": "v1",
-  "name_for_human": "OpenAI o3-2025-04-16 Stock Analysis",
-  "name_for_model": "openai_o3_stock_analysis",
-      "description_for_human": "🚀 基于 OpenAI o3-2025-04-16 的股票分析AI。专为股票市场分析优化参数配置（高推理、确定性输出），提供精确的技术分析、风险评估和投资建议。支持图表分析、实时数据处理和结构化输出。",
-      "description_for_model": "Stock market analysis AI powered by OpenAI o3-2025-04-16 with optimized parameters for financial analysis. CRITICAL SETTINGS: reasoning_effort=high, stream=false, max_tokens=4000. NOTE: temperature is not modifiable for o3 models. Specializes in technical analysis, risk assessment, market sentiment analysis, and investment recommendations. Provides deterministic, structured outputs for stock trading decisions. Supports chart analysis via image inputs and real-time market data processing.",
+  "name_for_human": "O3 Fixed Model Action",
+  "name_for_model": "o3_fixed_model_action",
+  "description_for_human": "🔒 OpenAI o3-2025-04-16 模型专用强制接口，确保100%使用最强推理能力的o3模型，支持200K上下文和推理token",
+  "description_for_model": "🎯 Fixed OpenAI o3-2025-04-16 model interface with forced model selection. Features: 200K context window, 100K max output tokens, reasoning token support, advanced inference capabilities. Ensures exclusive use of o3-2025-04-16 model with all responses clearly identified. Supports streaming, function calls, structured output, and tool integration.",
   "auth": {
-    "type": "bearer"
+    "type": "user_http",
+    "authorization_type": "bearer"
   },
   "api": {
     "type": "openapi",
     "url": "https://aiylt.github.io/.well-known/openapi.yaml"
   },
-  "logo_url": "https://openai.com/favicon.ico",
-  "contact_email": "support@openai.com",
-  "legal_info_url": "https://openai.com/policies"
+  "logo_url": "https://aiylt.github.io/.well-known/logo.png",
+  "contact_email": "support@example.com",
+  "legal_info_url": "https://example.com/legal"
 } 
